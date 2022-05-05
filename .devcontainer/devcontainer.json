@@ -3,6 +3,9 @@
   "build": {
     "dockerfile": "./Dockerfile",
   },
+  "remoteEnv": {
+    "GH_BASE_PATH": "/momohiki"
+  },
   "extensions": [
     "dbaeumer.vscode-eslint",
     "esbenp.prettier-vscode"
