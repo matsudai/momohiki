@@ -1,4 +1,4 @@
-import type { NextPage } from 'next';
+import type { GetStaticProps, NextPage } from 'next';
 import {
   ClipboardEventHandler,
   createElement,
@@ -8,6 +8,7 @@ import {
   useRef,
   useState
 } from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
 import remarkGfm from 'remark-gfm';
 import remarkParse from 'remark-parse';
 import remarkRehype from 'remark-rehype';
@@ -15,20 +16,21 @@ import rehypeHightlight from 'rehype-highlight';
 import rehypeReact from 'rehype-react';
 import rehypeStringify from 'rehype-stringify';
 import { unified } from 'unified';
-import Editor from '@monaco-editor/react';
+import Editor, { loader } from '@monaco-editor/react';
 import { constants } from '../lib/constants';
-
-import 'highlight.js/styles/default.css';
-
-import { loader } from '@monaco-editor/react';
+import { readFile } from 'fs/promises';
 
 loader.config({ paths: { vs: `${constants.basePath}/monaco-editor/min/vs` } });
 
 type EditorInstance = Parameters<Extract<Parameters<typeof Editor>[0]['onMount'], Function>>[0];
 
+interface PageProps {
+  htmlCssText: string;
+}
+
 const initialTextOnEditor = '# Hello World\n\nWelcome to my page 👀\n';
 
-const Home: NextPage = () => {
+const Page: NextPage<PageProps> = ({ htmlCssText }) => {
   const [textOnEditor, setTextOnEditor] = useState(initialTextOnEditor);
   const [Content, setContent] = useState(() => <div />);
   const [htmlBody, setHtmlBody] = useState<string>('');
@@ -133,7 +135,20 @@ const Home: NextPage = () => {
   const downloadHtml = () => {
     const link = downloadLinkRef.current;
     if (link != null) {
-      const html = `<!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8"><title>Document</title></head><body>${htmlBody}</body></html>`;
+      const content = renderToStaticMarkup(
+        <html>
+          {/* eslint-disable-next-line @next/next/no-head-element */}
+          <head lang="ja">
+            <meta charSet="UTF-8" />
+            <title>Document</title>
+            <style dangerouslySetInnerHTML={{ __html: htmlCssText }} />
+          </head>
+          <body>
+            <div className="viewer-root">{Content}</div>
+          </body>
+        </html>
+      );
+      const html = `<!DOCTYPE html>${content}`;
       const type = 'text/html;charset=utf-8';
       link.href = URL.createObjectURL(new Blob([html], { type }));
       link.download = 'index.html';
@@ -182,7 +197,9 @@ const Home: NextPage = () => {
 
           <div>
             <p style={{ backgroundColor: '#eeeeee' }}>Rendered HTML</p>
-            <div style={{ height: '80vh', width: '45vw', overflow: 'auto' }}>{Content}</div>
+            <div style={{ height: '80vh', width: '45vw', overflow: 'auto' }}>
+              <div className="viewer-root">{Content}</div>
+            </div>
           </div>
         </div>
 
@@ -210,4 +227,11 @@ const Home: NextPage = () => {
   );
 };
 
-export default Home;
+export const getStaticProps: GetStaticProps<PageProps> = async () => {
+  const cssTextViewer = (await readFile('src/styles/viewer.css')).toString('utf8');
+  const cssTextHljs = (await readFile('node_modules/highlight.js/styles/default.css')).toString('utf8');
+  const htmlCssText = `${cssTextViewer}${cssTextHljs}`;
+  return { props: { htmlCssText } };
+};
+
+export default Page;

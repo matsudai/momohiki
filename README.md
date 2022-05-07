@@ -2,7 +2,7 @@
 
 ### Markdown Parser
 
-npm i unified remark-parse remark-gfm remark-rehype rehype-highlight rehype-react rehype-stringify
+npm i unified remark-parse remark-gfm remark-rehype rehype-highlight rehype-react rehype-stringify highlight.js
 
 ### Markdown Editor
 

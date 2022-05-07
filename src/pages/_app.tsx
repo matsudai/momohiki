@@ -1,4 +1,5 @@
-import '../styles/globals.css';
+import '../styles/viewer.css';
+import 'highlight.js/styles/default.css';
 import type { AppProps } from 'next/app';
 
 function MyApp({ Component, pageProps }: AppProps) {
