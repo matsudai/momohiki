@@ -10,6 +10,7 @@ npm i unified remark-parse remark-gfm remark-rehype rehype-highlight rehype-reac
 
 ```sh
 npm i @monaco-editor/react
+npm i -D copy-webpack-plugin
 ```
 
 # Next.js

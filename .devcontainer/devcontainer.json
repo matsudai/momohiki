@@ -4,7 +4,7 @@
     "dockerfile": "./Dockerfile",
   },
   "remoteEnv": {
-    "GH_BASE_PATH": "/momohiki"
+    // "NEXT_PUBLIC_GH_BASE_PATH": "/momohiki"
   },
   "extensions": [
     "dbaeumer.vscode-eslint",

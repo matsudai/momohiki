@@ -16,8 +16,13 @@ import rehypeReact from 'rehype-react';
 import rehypeStringify from 'rehype-stringify';
 import { unified } from 'unified';
 import Editor from '@monaco-editor/react';
+import { constants } from '../lib/constants';
 
 import 'highlight.js/styles/default.css';
+
+import { loader } from '@monaco-editor/react';
+
+loader.config({ paths: { vs: `${constants.basePath}/monaco-editor/min/vs` } });
 
 type EditorInstance = Parameters<Extract<Parameters<typeof Editor>[0]['onMount'], Function>>[0];
 
