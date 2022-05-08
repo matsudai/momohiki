@@ -4,8 +4,8 @@
   "private": true,
   "description": "Markdown Manual Editor.",
   "scripts": {
-    "dev": "yarn workspace momohiki-editor run dev",
-    "export": "yarn workspace momohiki-editor run export && mv packages/momohiki-editor/out ./"
+    "dev": "yarn workspace momohiki-editor dev",
+    "export": "rm -rf ./out && yarn workspace momohiki-editor export && mv packages/momohiki-editor/out ./out"
   },
   "author": "Katsutoshi Fujihara",
   "license": "MIT",
