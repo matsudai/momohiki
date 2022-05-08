@@ -19,6 +19,7 @@ import { unified } from 'unified';
 import Editor, { loader } from '@monaco-editor/react';
 import { constants } from '../lib/constants';
 import { readFile } from 'fs/promises';
+import { Heading, HeadingProps } from '@chakra-ui/react';
 
 loader.config({ paths: { vs: `${constants.basePath}/monaco-editor/min/vs` } });
 
@@ -42,6 +43,10 @@ const Page: NextPage<PageProps> = ({ htmlCssText }) => {
     const mdast = unified().use(remarkParse).use(remarkGfm).parse(textOnEditor);
     setMdAstAsJson(JSON.stringify(mdast, null, 2));
 
+    const components = {
+      h1: (props: HeadingProps) => <Heading as="h1" {...props} />
+    };
+
     try {
       unified()
         .use(remarkRehype)
@@ -52,7 +57,7 @@ const Page: NextPage<PageProps> = ({ htmlCssText }) => {
           } else {
             setContent(
               unified()
-                .use(rehypeReact, { createElement /* , components: { a: Ax } */ })
+                .use(rehypeReact, { createElement, components })
                 .stringify(transformedNode as any)
             );
             setHtmlBody(

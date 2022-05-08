@@ -10,7 +10,11 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@chakra-ui/react": "^1.8.8",
+    "@emotion/react": "^11.9.0",
+    "@emotion/styled": "^11.8.1",
     "@monaco-editor/react": "^4.4.4",
+    "framer-motion": "^6.3.3",
     "highlight.js": "^11.5.1",
     "next": "12.1.4",
     "react": "18.0.0",
