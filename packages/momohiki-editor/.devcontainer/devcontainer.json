@@ -1,0 +1,15 @@
+{
+  "name": "Node.js",
+  "build": {
+    "dockerfile": "./Dockerfile",
+  },
+  "remoteEnv": {
+    // "NEXT_PUBLIC_GH_BASE_PATH": "/momohiki"
+  },
+  "extensions": [
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode"
+  ],
+  "postCreateCommand": "npm i",
+  "remoteUser": "node"
+}
