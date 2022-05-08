@@ -13,7 +13,7 @@
 1. Install typescript, parcel and react.
 
 ```txt
-npm -w momohiki-viewer i -D typescript parcel react react-dom @types/react @types/react-dom
+yarn workspace momohiki-viewer add -D typescript parcel react react-dom @types/react @types/react-dom
 ```
 
 2. Add `.gitignore`
@@ -91,8 +91,24 @@ export const App: FC = () => {
 1. Install parcel validator.
 
 ```txt
-npm -w momohiki-viewer i -D @parcel/validator-typescript @parcel/config-default
+yarn workspace momohiki-viewer add -D @parcel/validator-typescript @parcel/config-default
 ```
 
 2. Add `.parcelrc`
+
+### Chakra UI
+
+1. Install Chakra-ui.
+
+```txt
+yarn workspace momohiki-viewer add -D @chakra-ui/react @emotion/react@^11 @emotion/styled@^11 framer-motion@^6
+```
+
+2. Install dependencies for parcel
+
+```txt
+yarn workspace momohiki-viewer add -D process
+```
+
+3. setup Chakra UI -> ref official page
 

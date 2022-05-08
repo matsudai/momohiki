@@ -2,15 +2,17 @@
 
 ### Markdown Parser
 
-npm i unified remark-parse remark-gfm remark-rehype rehype-highlight rehype-react rehype-stringify highlight.js
+```sh
+yarn workspace momohiki-editor add unified remark-parse remark-gfm remark-rehype rehype-highlight rehype-react rehype-stringify highlight.js
+```
 
 ### Markdown Editor
 
 * ※ UNOFFICIAL
 
 ```sh
-npm i @monaco-editor/react
-npm i -D copy-webpack-plugin
+yarn workspace momohiki-editor add @monaco-editor/react monaco-editor
+yarn workspace momohiki-editor add -D copy-webpack-plugin
 ```
 
 # Next.js

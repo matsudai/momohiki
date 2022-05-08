@@ -1,5 +1,10 @@
+import { ChakraProvider, Heading } from '@chakra-ui/react';
 import { FC } from 'react';
 
 export const App: FC = () => {
-  return <div>Hello World</div>;
+  return (
+    <ChakraProvider>
+      <Heading as="h1">Hello World</Heading>
+    </ChakraProvider>
+  );
 };
