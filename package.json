@@ -2,7 +2,10 @@
   "name": "momohiki",
   "version": "0.0.0",
   "description": "Markdown Manual Editor.",
-  "scripts": {},
+  "scripts": {
+    "dev": "npm -w momohiki-editor run dev",
+    "export": "npm -w momohiki-editor run export && mv packages/momohiki-editor/out ./"
+  },
   "author": "Katsutoshi Fujihara",
   "license": "MIT",
   "workspaces": [
