@@ -84,3 +84,15 @@ export const App: FC = () => {
 };
 ```
 
+### Parcel validator
+
+(this package is EXPERIMENTAL)
+
+1. Install parcel validator.
+
+```txt
+npm -w momohiki-viewer i -D @parcel/validator-typescript @parcel/config-default
+```
+
+2. Add `.parcelrc`
+
