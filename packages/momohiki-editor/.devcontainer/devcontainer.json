@@ -1,0 +1,18 @@
+{
+  "name": "Node.js",
+  "build": {
+    "dockerfile": "./Dockerfile"
+  },
+  "workspaceMount": "source=${localWorkspaceFolder}/../..,target=/workspace,type=bind",
+  "workspaceFolder": "/workspace/packages/momohiki-editor",
+  "mounts": [],
+  // "remoteEnv": {
+  //   "NEXT_PUBLIC_GH_BASE_PATH": "/momohiki"
+  // },
+  "extensions": [
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode"
+  ],
+  "postCreateCommand": "npm i",
+  "remoteUser": "node"
+}
