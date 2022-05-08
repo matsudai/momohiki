@@ -8,7 +8,6 @@ import {
   useRef,
   useState
 } from 'react';
-import { renderToStaticMarkup } from 'react-dom/server';
 import remarkGfm from 'remark-gfm';
 import remarkParse from 'remark-parse';
 import remarkRehype from 'remark-rehype';
@@ -18,24 +17,21 @@ import rehypeStringify from 'rehype-stringify';
 import { unified } from 'unified';
 import Editor, { loader } from '@monaco-editor/react';
 import { constants } from '../lib/constants';
-import { readFile } from 'fs/promises';
 import { Heading, HeadingProps } from '@chakra-ui/react';
+import { Root } from 'rehype-highlight/lib';
 
 loader.config({ paths: { vs: `${constants.basePath}/monaco-editor/min/vs` } });
 
 type EditorInstance = Parameters<Extract<Parameters<typeof Editor>[0]['onMount'], Function>>[0];
 
-interface PageProps {
-  htmlCssText: string;
-}
-
 const initialTextOnEditor = '# Hello World\n\nWelcome to my page 👀\n';
 
-const Page: NextPage<PageProps> = ({ htmlCssText }) => {
+const Page: NextPage = () => {
   const [textOnEditor, setTextOnEditor] = useState(initialTextOnEditor);
   const [Content, setContent] = useState(() => <div />);
   const [htmlBody, setHtmlBody] = useState<string>('');
   const [mdastAsJson, setMdAstAsJson] = useState<string>('');
+  const [hast, setHast] = useState<Root>();
   const editorRef = useRef<EditorInstance | null>(null);
   const downloadLinkRef = useRef<HTMLAnchorElement | null>(null);
 
@@ -52,6 +48,7 @@ const Page: NextPage<PageProps> = ({ htmlCssText }) => {
         .use(remarkRehype)
         .use(rehypeHightlight, { ignoreMissing: true, subset: false }) // 言語が見つからないエラーを無視、言語の推測を無効
         .run(mdast, (error, transformedNode) => {
+          setHast(transformedNode);
           if (error != null || transformedNode == null) {
             console.log(error);
           } else {
@@ -137,24 +134,15 @@ const Page: NextPage<PageProps> = ({ htmlCssText }) => {
     }
   };
 
-  const downloadHtml = () => {
+  const downloadHtml = async () => {
     const link = downloadLinkRef.current;
     if (link != null) {
-      const content = renderToStaticMarkup(
-        <html>
-          {/* eslint-disable-next-line @next/next/no-head-element */}
-          <head lang="ja">
-            <meta charSet="UTF-8" />
-            <title>Document</title>
-            <style dangerouslySetInnerHTML={{ __html: htmlCssText }} />
-          </head>
-          <body>
-            <div className="viewer-root">{Content}</div>
-          </body>
-        </html>
-      );
-      const html = `<!DOCTYPE html>${content}`;
       const type = 'text/html;charset=utf-8';
+      const template = await (await fetch(`${constants.basePath}/templates/viewer.html`)).text();
+      const html = template.replaceAll(
+        /<script type="application\/json" id="app-source">\{\}<\/script>/g,
+        `<script type="application/json" id="app-source">${JSON.stringify(hast)}</script>`
+      );
       link.href = URL.createObjectURL(new Blob([html], { type }));
       link.download = 'index.html';
       link.click();
@@ -230,13 +218,6 @@ const Page: NextPage<PageProps> = ({ htmlCssText }) => {
       </main>
     </div>
   );
-};
-
-export const getStaticProps: GetStaticProps<PageProps> = async () => {
-  const cssTextViewer = (await readFile('src/styles/viewer.css')).toString('utf8');
-  const cssTextHljs = (await readFile('node_modules/highlight.js/styles/default.css')).toString('utf8');
-  const htmlCssText = `${cssTextViewer}${cssTextHljs}`;
-  return { props: { htmlCssText } };
 };
 
 export default Page;

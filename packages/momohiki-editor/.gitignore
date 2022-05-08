@@ -2,6 +2,10 @@
 # （Webpackのプラグインでnode_modulesからpublicへコピーされます）
 /public/monaco-editor
 
+# 静的なHTMLファイルのテンプレートを管理しません。
+# （Webpackのプラグインでnode_modulesからpublicへコピーされます）
+/public/templates
+
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies

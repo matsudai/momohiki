@@ -30,6 +30,13 @@ const nextConfig = {
           {
             from: path.join(__dirname, 'node_modules/monaco-editor/min-maps/vs'),
             to: path.join(__dirname, 'public/monaco-editor/min-maps/vs')
+          },
+          /*
+           * 静的なHTMLファイルのテンプレートをpublicへコピーします。
+           */
+          {
+            from: path.join(__dirname, 'node_modules/momohiki-viewer/dist/index.html'),
+            to: path.join(__dirname, 'public/templates/viewer.html')
           }
         ]
       })

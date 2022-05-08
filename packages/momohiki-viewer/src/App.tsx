@@ -20,7 +20,6 @@ export const App: FC<AppProps> = ({ hast }) => {
 
   return (
     <ChakraProvider>
-      <Heading as="h1">Hello world</Heading>
       <div>{Content}</div>
     </ChakraProvider>
   );
