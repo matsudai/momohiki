@@ -1,0 +1,12 @@
+{
+  "name": "Node.js",
+  "build": {
+    "dockerfile": "./Dockerfile"
+  },
+  "extensions": [
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode"
+  ],
+  "postCreateCommand": "npm i",
+  "remoteUser": "node"
+}
