@@ -4,5 +4,10 @@
   "description": "Markdown Manual Editor.",
   "scripts": {},
   "author": "Katsutoshi Fujihara",
-  "license": "MIT"
+  "license": "MIT",
+  "workspaces": [
+    "packages/momohiki-common",
+    "packages/momohiki-editor",
+    "packages/momohiki-viewer"
+  ]
 }
