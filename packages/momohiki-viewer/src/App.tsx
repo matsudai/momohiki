@@ -1,10 +1,27 @@
-import { ChakraProvider, Heading } from '@chakra-ui/react';
-import { FC } from 'react';
+import { ChakraProvider, Heading, HeadingProps } from '@chakra-ui/react';
+import { createElement, FC, useEffect, useState } from 'react';
+import rehypeReact from 'rehype-react';
+import { unified } from 'unified';
 
-export const App: FC = () => {
+interface AppProps {
+  hast: any;
+}
+
+const components = {
+  h1: (props: HeadingProps) => <Heading as="h1" {...props} />
+};
+
+export const App: FC<AppProps> = ({ hast }) => {
+  const [Content, setContent] = useState(() => <div />);
+
+  useEffect(() => {
+    setContent(unified().use(rehypeReact, { createElement, components }).stringify(hast));
+  }, [hast]);
+
   return (
     <ChakraProvider>
-      <Heading as="h1">Hello World</Heading>
+      <Heading as="h1">Hello world</Heading>
+      <div>{Content}</div>
     </ChakraProvider>
   );
 };
