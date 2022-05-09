@@ -35,8 +35,8 @@ const nextConfig = {
            * 静的なHTMLファイルのテンプレートをpublicへコピーします。
            */
           {
-            from: path.join(__dirname, 'node_modules/momohiki-viewer/dist/index.html'),
-            to: path.join(__dirname, 'public/templates/viewer.html')
+            from: path.join(__dirname, 'node_modules/momohiki-viewer/dist'),
+            to: path.join(__dirname, 'public/templates/viewer')
           }
         ]
       })

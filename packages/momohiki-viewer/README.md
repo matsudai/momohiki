@@ -102,6 +102,7 @@ yarn workspace momohiki-viewer add -D @parcel/validator-typescript @parcel/confi
 
 ```txt
 yarn workspace momohiki-viewer add -D @chakra-ui/react @emotion/react@^11 @emotion/styled@^11 framer-motion@^6
+yarn workspace momohiki-viewer add -D @chakra-ui/icons react-icons
 ```
 
 2. Install dependencies for parcel
