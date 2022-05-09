@@ -1,4 +1,4 @@
-import type { GetStaticProps, NextPage } from 'next';
+import type { NextPage } from 'next';
 import {
   ClipboardEventHandler,
   createElement,
@@ -8,7 +8,6 @@ import {
   useRef,
   useState
 } from 'react';
-import { renderToStaticMarkup } from 'react-dom/server';
 import remarkGfm from 'remark-gfm';
 import remarkParse from 'remark-parse';
 import remarkRehype from 'remark-rehype';
@@ -18,24 +17,38 @@ import rehypeStringify from 'rehype-stringify';
 import { unified } from 'unified';
 import Editor, { loader } from '@monaco-editor/react';
 import { constants } from '../lib/constants';
-import { readFile } from 'fs/promises';
-import { Heading, HeadingProps } from '@chakra-ui/react';
+import { ExternalLinkIcon } from '@chakra-ui/icons';
+import {
+  Heading,
+  HeadingProps,
+  Link,
+  LinkProps,
+  ListItem,
+  OrderedList,
+  Table,
+  Tbody,
+  Td,
+  Text,
+  TextProps,
+  Th,
+  Thead,
+  Tr,
+  UnorderedList
+} from '@chakra-ui/react';
+import { Root } from 'rehype-highlight/lib';
 
 loader.config({ paths: { vs: `${constants.basePath}/monaco-editor/min/vs` } });
 
 type EditorInstance = Parameters<Extract<Parameters<typeof Editor>[0]['onMount'], Function>>[0];
 
-interface PageProps {
-  htmlCssText: string;
-}
-
 const initialTextOnEditor = '# Hello World\n\nWelcome to my page 👀\n';
 
-const Page: NextPage<PageProps> = ({ htmlCssText }) => {
+const Page: NextPage = () => {
   const [textOnEditor, setTextOnEditor] = useState(initialTextOnEditor);
   const [Content, setContent] = useState(() => <div />);
   const [htmlBody, setHtmlBody] = useState<string>('');
   const [mdastAsJson, setMdAstAsJson] = useState<string>('');
+  const [hast, setHast] = useState<Root>();
   const editorRef = useRef<EditorInstance | null>(null);
   const downloadLinkRef = useRef<HTMLAnchorElement | null>(null);
 
@@ -44,7 +57,59 @@ const Page: NextPage<PageProps> = ({ htmlCssText }) => {
     setMdAstAsJson(JSON.stringify(mdast, null, 2));
 
     const components = {
-      h1: (props: HeadingProps) => <Heading as="h1" {...props} />
+      /*
+       * Heading (4 - 6 are same level.)
+       */
+      h1: (props: HeadingProps) => <Heading as="h1" size="2xl" {...props} />,
+      h2: (props: HeadingProps) => <Heading as="h2" size="xl" {...props} />,
+      h3: (props: HeadingProps) => <Heading as="h3" size="lg" {...props} />,
+      h4: (props: HeadingProps) => <Heading as="h4" size="md" {...props} />,
+      h5: (props: HeadingProps) => <Heading as="h5" size="md" {...props} />,
+      h6: (props: HeadingProps) => <Heading as="h6" size="md" {...props} />,
+      /*
+       * Link.
+       */
+      a: ({ children, ...props }: LinkProps) => (
+        <Link isExternal {...props}>
+          {children}
+          <ExternalLinkIcon mx="2px" />
+        </Link>
+      ),
+      /*
+       * Table.
+       */
+      table: Table,
+      thead: Thead,
+      tbody: Tbody,
+      tr: Tr,
+      th: Th,
+      td: Td,
+      /*
+       * Paragraph.
+       */
+      p: (props: TextProps) => <Text {...props} />,
+      /*
+       * Word in paragraph.
+       */
+      i: (props: TextProps) => <Text as="i" {...props} />,
+      u: (props: TextProps) => <Text as="u" {...props} />,
+      abbr: (props: TextProps) => <Text as="abbr" {...props} />,
+      cite: (props: TextProps) => <Text as="cite" {...props} />,
+      // del: (props: TextProps) => <Text as="del" {...props} />,
+      em: (props: TextProps) => <Text as="em" {...props} />,
+      // ins: (props: TextProps) => <Text as="ins" {...props} />,
+      kbd: (props: TextProps) => <Text as="kbd" {...props} />,
+      mark: (props: TextProps) => <Text as="mark" {...props} />,
+      s: (props: TextProps) => <Text as="s" {...props} />,
+      samp: (props: TextProps) => <Text as="samp" {...props} />,
+      sub: (props: TextProps) => <Text as="sub" {...props} />,
+      sup: (props: TextProps) => <Text as="sup" {...props} />,
+      /*
+       * Lists.
+       */
+      ol: OrderedList,
+      ul: UnorderedList,
+      li: ListItem
     };
 
     try {
@@ -52,6 +117,7 @@ const Page: NextPage<PageProps> = ({ htmlCssText }) => {
         .use(remarkRehype)
         .use(rehypeHightlight, { ignoreMissing: true, subset: false }) // 言語が見つからないエラーを無視、言語の推測を無効
         .run(mdast, (error, transformedNode) => {
+          setHast(transformedNode);
           if (error != null || transformedNode == null) {
             console.log(error);
           } else {
@@ -137,24 +203,15 @@ const Page: NextPage<PageProps> = ({ htmlCssText }) => {
     }
   };
 
-  const downloadHtml = () => {
+  const downloadHtml = async () => {
     const link = downloadLinkRef.current;
     if (link != null) {
-      const content = renderToStaticMarkup(
-        <html>
-          {/* eslint-disable-next-line @next/next/no-head-element */}
-          <head lang="ja">
-            <meta charSet="UTF-8" />
-            <title>Document</title>
-            <style dangerouslySetInnerHTML={{ __html: htmlCssText }} />
-          </head>
-          <body>
-            <div className="viewer-root">{Content}</div>
-          </body>
-        </html>
-      );
-      const html = `<!DOCTYPE html>${content}`;
       const type = 'text/html;charset=utf-8';
+      const template = await (await fetch(`${constants.basePath}/templates/viewer/index.html`)).text();
+      const html = template.replaceAll(
+        /<script type="application\/json" id="app-source">\{\}<\/script>/g,
+        `<script type="application/json" id="app-source">${JSON.stringify(hast)}</script>`
+      );
       link.href = URL.createObjectURL(new Blob([html], { type }));
       link.download = 'index.html';
       link.click();
@@ -230,13 +287,6 @@ const Page: NextPage<PageProps> = ({ htmlCssText }) => {
       </main>
     </div>
   );
-};
-
-export const getStaticProps: GetStaticProps<PageProps> = async () => {
-  const cssTextViewer = (await readFile('src/styles/viewer.css')).toString('utf8');
-  const cssTextHljs = (await readFile('node_modules/highlight.js/styles/default.css')).toString('utf8');
-  const htmlCssText = `${cssTextViewer}${cssTextHljs}`;
-  return { props: { htmlCssText } };
 };
 
 export default Page;

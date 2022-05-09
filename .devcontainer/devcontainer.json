@@ -7,6 +7,6 @@
     "dbaeumer.vscode-eslint",
     "esbenp.prettier-vscode"
   ],
-  "postCreateCommand": "npm i",
+  "postCreateCommand": "yarn install",
   "remoteUser": "node"
 }

@@ -1,16 +1,21 @@
 {
   "name": "momohiki",
   "version": "0.0.0",
+  "private": true,
   "description": "Markdown Manual Editor.",
   "scripts": {
-    "dev": "npm -w momohiki-editor run dev",
-    "export": "npm -w momohiki-editor run export && mv packages/momohiki-editor/out ./"
+    "dev": "yarn workspace momohiki-editor dev",
+    "clean": "rm -rf ./out && yarn workspace momohiki-editor clean && yarn workspace momohiki-viewer clean",
+    "export": "yarn clean && yarn workspace momohiki-viewer build && yarn workspace momohiki-editor export && mv packages/momohiki-editor/out ./out"
   },
   "author": "Katsutoshi Fujihara",
   "license": "MIT",
-  "workspaces": [
-    "packages/momohiki-common",
-    "packages/momohiki-editor",
-    "packages/momohiki-viewer"
-  ]
+  "workspaces": {
+    "packages": [
+      "packages/momohiki-common",
+      "packages/momohiki-editor",
+      "packages/momohiki-viewer"
+    ],
+    "nohoist": ["**/**"]
+  }
 }
