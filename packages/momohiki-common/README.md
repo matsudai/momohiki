@@ -88,3 +88,20 @@ yarn workspace momohiki-common add -D @parcel/validator-typescript @parcel/confi
 
 2. Add `.parcelrc`
 
+### Chakra UI
+
+1. Install Chakra-ui.
+
+```txt
+yarn workspace momohiki-common add -D @chakra-ui/react @emotion/react@^11 @emotion/styled@^11 framer-motion@^6
+yarn workspace momohiki-common add -D @chakra-ui/icons react-icons
+```
+
+2. Install dependencies for parcel
+
+```txt
+yarn workspace momohiki-common add -D process
+```
+
+3. setup Chakra UI -> ref official page
+

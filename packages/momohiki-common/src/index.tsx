@@ -1,5 +1,6 @@
+import { ChakraProvider } from '@chakra-ui/react';
 import { FC } from 'react';
 
 export const App: FC = () => {
-  return <div>Hello World</div>;
+  return <ChakraProvider>Hello World</ChakraProvider>;
 };
