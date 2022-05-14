@@ -105,3 +105,10 @@ yarn workspace momohiki-common add -D process
 
 3. setup Chakra UI -> ref official page
 
+### Renderer
+
+1. Install Rehype-React and highlight.js
+
+```txt
+yarn workspace momohiki-common add -D unified rehype-react highlight.js
+```
