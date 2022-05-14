@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>My Parcel App</title>
+  </head>
+  <body>
+    <div id="app">...loading...</div>
+    <script type="module">
+      import { createRoot } from 'react-dom/client';
+      import { App } from './index.tsx';
+
+      const container = document.getElementById('app');
+      if (container) {
+        const root = createRoot(container);
+        root.render(<App />);
+      }
+    </script>
+  </body>
+</html>

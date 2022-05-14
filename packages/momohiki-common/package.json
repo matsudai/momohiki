@@ -1,4 +1,16 @@
 {
   "name": "momohiki-common",
-  "version": "0.0.0"
+  "version": "0.0.0",
+  "source": "src/sample.html",
+  "scripts": {
+    "dev": "parcel --cache-dir ./.parcel-cache --no-autoinstall"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.9",
+    "@types/react-dom": "^18.0.4",
+    "parcel": "^2.5.0",
+    "react": "^18.1.0",
+    "react-dom": "^18.1.0",
+    "typescript": "^4.6.4"
+  }
 }

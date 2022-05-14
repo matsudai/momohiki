@@ -20,7 +20,7 @@ yarn workspace momohiki-viewer add -D typescript parcel react react-dom @types/r
 
 ```txt
 /.parcel-cache        # Parcel build cache.
-/dist                 # Parcel build results.
+/dist                 # Packages.
 /tsconfig.tsbuildinfo # tsc check cache.
 ```
 
