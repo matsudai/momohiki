@@ -76,3 +76,15 @@ export const App: FC = () => {
 };
 ```
 
+### Parcel validator
+
+(this package is EXPERIMENTAL)
+
+1. Install parcel validator.
+
+```txt
+yarn workspace momohiki-common add -D @parcel/validator-typescript @parcel/config-default
+```
+
+2. Add `.parcelrc`
+

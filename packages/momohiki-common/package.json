@@ -6,6 +6,8 @@
     "dev": "parcel --cache-dir ./.parcel-cache --no-autoinstall"
   },
   "devDependencies": {
+    "@parcel/config-default": "^2.5.0",
+    "@parcel/validator-typescript": "^2.5.0",
     "@types/react": "^18.0.9",
     "@types/react-dom": "^18.0.4",
     "parcel": "^2.5.0",
