@@ -16,6 +16,8 @@
       "packages/momohiki-editor",
       "packages/momohiki-viewer"
     ],
-    "nohoist": ["**/**"]
+    "nohoist": [
+      "**/**"
+    ]
   }
 }
