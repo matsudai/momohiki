@@ -1,23 +1,48 @@
 {
   "name": "momohiki",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "private": true,
-  "description": "Markdown Manual Editor.",
   "scripts": {
-    "dev": "yarn workspace momohiki-editor dev",
-    "clean": "rm -rf ./out && yarn workspace momohiki-editor clean && yarn workspace momohiki-viewer clean",
-    "export": "yarn clean && yarn workspace momohiki-viewer build && yarn workspace momohiki-editor export && mv packages/momohiki-editor/out ./out"
+    "clean": "rm -rf ./next ./out ./public/monaco-editor ./public/static-templates /tmp/.parcel-cache",
+    "dev": "concurrently \"parcel watch src/static/index.html --dist-dir public/static-templates --cache-dir /tmp/.parcel-cache --no-autoinstall\" \"next dev\"",
+    "build": "parcel build src/static/index.html --dist-dir public/static-templates --cache-dir /tmp/.parcel-cache --no-autoinstall && next build",
+    "export": "yarn build && next export",
+    "start": "next start",
+    "lint": "next lint"
   },
-  "author": "Katsutoshi Fujihara",
-  "license": "MIT",
-  "workspaces": {
-    "packages": [
-      "packages/momohiki-common",
-      "packages/momohiki-editor",
-      "packages/momohiki-viewer"
-    ],
-    "nohoist": [
-      "**/**"
-    ]
+  "dependencies": {
+    "@chakra-ui/icons": "^2.0.0",
+    "@chakra-ui/react": "^2.0.0",
+    "@emotion/react": "^11",
+    "@emotion/styled": "^11",
+    "@monaco-editor/react": "^4.4.5",
+    "framer-motion": "^6",
+    "highlight.js": "^11.5.1",
+    "monaco-editor": "^0.33.0",
+    "next": "12.1.6",
+    "react": "18.1.0",
+    "react-dom": "18.1.0",
+    "react-icons": "^4.3.1",
+    "rehype-highlight": "^5.0.2",
+    "rehype-react": "^7.1.1",
+    "remark-gfm": "^3.0.1",
+    "remark-parse": "^10.0.1",
+    "remark-rehype": "^10.1.0",
+    "unified": "^10.1.2"
+  },
+  "devDependencies": {
+    "@parcel/config-default": "^2.5.0",
+    "@parcel/transformer-typescript-tsc": "^2.5.0",
+    "@parcel/validator-typescript": "^2.5.0",
+    "@types/node": "17.0.33",
+    "@types/react": "18.0.9",
+    "@types/react-dom": "18.0.4",
+    "concurrently": "^7.2.0",
+    "copy-webpack-plugin": "^10.2.4",
+    "eslint": "8.15.0",
+    "eslint-config-next": "12.1.6",
+    "parcel": "^2.5.0",
+    "process": "^0.11.10",
+    "typescript": "4.6.4"
   }
 }

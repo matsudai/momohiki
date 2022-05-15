@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>My Parcel App</title>
+  </head>
+  <body>
+    <div id="app">...loading...</div>
+    <script type="application/json" id="app-source"></script>
+    <style>
+      @import "npm:highlight.js/styles/default.css";
+    </style>
+    <script type="module">
+      import { createRoot } from 'react-dom/client';
+      import { ChakraProvider } from '@chakra-ui/react';
+      import { HastRenderer } from '../lib/renderer';
+
+      const hastText = document.getElementById('app-source')?.textContent;
+      const hast = hastText ? JSON.parse(hastText) : {};
+
+      const container = document.getElementById('app');
+      if (container) {
+        const root = createRoot(container);
+        root.render(
+          <ChakraProvider>
+            <HastRenderer hast={hast} />
+          </ChakraProvider>
+        );
+      }
+    </script>
+  </body>
+</html>

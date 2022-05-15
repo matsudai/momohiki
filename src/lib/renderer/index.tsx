@@ -16,13 +16,9 @@ import {
   Tr,
   UnorderedList
 } from '@chakra-ui/react';
-import { createElement, FC, useEffect, useState } from 'react';
+import { createElement, FC, useMemo } from 'react';
 import rehypeReact from 'rehype-react';
 import { unified } from 'unified';
-
-interface AppProps {
-  hast: any;
-}
 
 const components = {
   /*
@@ -80,12 +76,12 @@ const components = {
   li: ListItem
 };
 
-export const App: FC<AppProps> = ({ hast }) => {
-  const [Content, setContent] = useState(() => <div />);
+type HastRendererProps = {
+  hast: any;
+};
 
-  useEffect(() => {
-    setContent(unified().use(rehypeReact, { createElement, components }).stringify(hast));
-  }, [hast]);
+export const HastRenderer: FC<HastRendererProps> = ({ hast }) => {
+  const Content = useMemo(() => unified().use(rehypeReact, { createElement, components }).stringify(hast), [hast]);
 
   return <div>{Content}</div>;
 };
