@@ -9,103 +9,19 @@ loader.config({ paths: { vs: '/monaco-editor/min/vs' } });
 
 type EditorInstance = Parameters<Extract<Parameters<typeof Editor>[0]['onMount'], Function>>[0];
 
-const initialTextOnEditor = '# Hello World\n\nWelcome to my page 👀\n';
+const initialTextOnEditor =
+  '---\n__Advertisement :)__\n\n- __[pica](https://nodeca.github.io/pica/demo/)__ - high quality and fast image\n  resize in browser.\n- __[babelfish](https://github.com/nodeca/babelfish/)__ - developer friendly\n  i18n with plurals support and easy syntax.\n\nYou will like those projects!\n\n---\n\n# h1 Heading 8-)\n## h2 Heading\n### h3 Heading\n#### h4 Heading\n##### h5 Heading\n###### h6 Heading\n\n\n## Horizontal Rules\n\n___\n\n---\n\n***\n\n\n## Typographic replacements\n\nEnable typographer option to see result.\n\n(c) (C) (r) (R) (tm) (TM) (p) (P) +-\n\ntest.. test... test..... test?..... test!....\n\n!!!!!! ???? ,,  -- ---\n\n"Smartypants, double quotes" and \'single quotes\'\n\n\n## Emphasis\n\n**This is bold text**\n\n__This is bold text__\n\n*This is italic text*\n\n_This is italic text_\n\n~~Strikethrough~~\n\n\n## Blockquotes\n\n\n> Blockquotes can also be nested...\n>> ...by using additional greater-than signs right next to each other...\n> > > ...or with spaces between arrows.\n\n\n## Lists\n\nUnordered\n\n+ Create a list by starting a line with `+`, `-`, or `*`\n+ Sub-lists are made by indenting 2 spaces:\n  - Marker character change forces new list start:\n    * Ac tristique libero volutpat at\n    + Facilisis in pretium nisl aliquet\n    - Nulla volutpat aliquam velit\n+ Very easy!\n\nOrdered\n\n1. Lorem ipsum dolor sit amet\n2. Consectetur adipiscing elit\n3. Integer molestie lorem at massa\n\n\n1. You can use sequential numbers...\n1. ...or keep all the numbers as `1.`\n\nStart numbering with offset:\n\n57. foo\n1. bar\n\n\n## Code\n\nInline `code`\n\nIndented code\n\n    // Some comments\n    line 1 of code\n    line 2 of code\n    line 3 of code\n\n\nBlock code "fences"\n\n```\nSample text here...\n```\n\nSyntax highlighting\n\n``` js\nvar foo = function (bar) {\n  return bar++;\n};\n\nconsole.log(foo(5));\n```\n\n## Tables\n\n| Option | Description |\n| ------ | ----------- |\n| data   | path to data files to supply the data that will be passed into templates. |\n| engine | engine to be used for processing templates. Handlebars is the default. |\n| ext    | extension to be used for dest files. |\n\nRight aligned columns\n\n| Option | Description |\n| ------:| -----------:|\n| data   | path to data files to supply the data that will be passed into templates. |\n| engine | engine to be used for processing templates. Handlebars is the default. |\n| ext    | extension to be used for dest files. |\n\n\n## Links\n\n[link text](http://dev.nodeca.com)\n\n[link with title](http://nodeca.github.io/pica/demo/ "title text!")\n\nAutoconverted link https://github.com/nodeca/pica (enable linkify to see)\n\n\n## Images\n\n![Minion](https://octodex.github.com/images/minion.png)\n![Stormtroopocat](https://octodex.github.com/images/stormtroopocat.jpg "The Stormtroopocat")\n\nLike links, Images also have a footnote style syntax\n\n![Alt text][id]\n\nWith a reference later in the document defining the URL location:\n\n[id]: https://octodex.github.com/images/dojocat.jpg  "The Dojocat"\n\n\n## Plugins\n\nThe killer feature of `markdown-it` is very effective support of\n[syntax plugins](https://www.npmjs.org/browse/keyword/markdown-it-plugin).\n\n\n### [Emojies](https://github.com/markdown-it/markdown-it-emoji)\n\n> Classic markup: :wink: :crush: :cry: :tear: :laughing: :yum:\n>\n> Shortcuts (emoticons): :-) :-( 8-) ;)\n\nsee [how to change output](https://github.com/markdown-it/markdown-it-emoji#change-output) with twemoji.\n\n\n### [Subscript](https://github.com/markdown-it/markdown-it-sub) / [Superscript](https://github.com/markdown-it/markdown-it-sup)\n\n- 19^th^\n- H~2~O\n\n\n### [<ins>](https://github.com/markdown-it/markdown-it-ins)\n\n++Inserted text++\n\n\n### [<mark>](https://github.com/markdown-it/markdown-it-mark)\n\n==Marked text==\n\n\n### [Footnotes](https://github.com/markdown-it/markdown-it-footnote)\n\nFootnote 1 link[^first].\n\nFootnote 2 link[^second].\n\nInline footnote^[Text of inline footnote] definition.\n\nDuplicated footnote reference[^second].\n\n[^first]: Footnote **can have markup**\n\n    and multiple paragraphs.\n\n[^second]: Footnote text.\n\n\n### [Definition lists](https://github.com/markdown-it/markdown-it-deflist)\n\nTerm 1\n\n:   Definition 1\nwith lazy continuation.\n\nTerm 2 with *inline markup*\n\n:   Definition 2\n\n        { some code, part of Definition 2 }\n\n    Third paragraph of definition 2.\n\n_Compact style:_\n\nTerm 1\n  ~ Definition 1\n\nTerm 2\n  ~ Definition 2a\n  ~ Definition 2b\n\n\n### [Abbreviations](https://github.com/markdown-it/markdown-it-abbr)\n\nThis is HTML abbreviation example.\n\nIt converts "HTML", but keep intact partial entries like "xxxHTMLyyy" and so on.\n\n*[HTML]: Hyper Text Markup Language\n\n### [Custom containers](https://github.com/markdown-it/markdown-it-container)\n\n::: warning\n*here be dragons*\n:::\n';
 
 const Page: NextPage = () => {
   const [textOnEditor, setTextOnEditor] = useState(initialTextOnEditor);
-  const [Content, setContent] = useState(() => <div />);
-  const [htmlBody, setHtmlBody] = useState<string>('');
-  const [mdastAsJson, setMdAstAsJson] = useState<string>('');
-  const [hast, setHast] = useState<Root>();
+  const [hast, setHast] = useState<{ hast: Root; index: { key: string; text: string }[] }>();
   const editorRef = useRef<EditorInstance | null>(null);
+  const previewRef = useRef<HTMLDivElement | null>(null);
   const downloadLinkRef = useRef<HTMLAnchorElement | null>(null);
 
   useEffect(() => {
-    md2Hast(textOnEditor).then(setHast);
-    // const mdast = unified().use(remarkParse).use(remarkGfm).parse(textOnEditor);
-    // setMdAstAsJson(JSON.stringify(mdast, null, 2));
-
-    // const components = {
-    //   /*
-    //    * Heading (4 - 6 are same level.)
-    //    */
-    //   h1: (props: HeadingProps) => <Heading as="h1" size="2xl" {...props} />,
-    //   h2: (props: HeadingProps) => <Heading as="h2" size="xl" {...props} />,
-    //   h3: (props: HeadingProps) => <Heading as="h3" size="lg" {...props} />,
-    //   h4: (props: HeadingProps) => <Heading as="h4" size="md" {...props} />,
-    //   h5: (props: HeadingProps) => <Heading as="h5" size="md" {...props} />,
-    //   h6: (props: HeadingProps) => <Heading as="h6" size="md" {...props} />,
-    //   /*
-    //    * Link.
-    //    */
-    //   a: ({ children, ...props }: LinkProps) => (
-    //     <Link isExternal {...props}>
-    //       {children}
-    //       <ExternalLinkIcon mx="2px" />
-    //     </Link>
-    //   ),
-    //   /*
-    //    * Table.
-    //    */
-    //   table: Table,
-    //   thead: Thead,
-    //   tbody: Tbody,
-    //   tr: Tr,
-    //   th: Th,
-    //   td: Td,
-    //   /*
-    //    * Paragraph.
-    //    */
-    //   p: (props: TextProps) => <Text {...props} />,
-    //   /*
-    //    * Word in paragraph.
-    //    */
-    //   i: (props: TextProps) => <Text as="i" {...props} />,
-    //   u: (props: TextProps) => <Text as="u" {...props} />,
-    //   abbr: (props: TextProps) => <Text as="abbr" {...props} />,
-    //   cite: (props: TextProps) => <Text as="cite" {...props} />,
-    //   // del: (props: TextProps) => <Text as="del" {...props} />,
-    //   em: (props: TextProps) => <Text as="em" {...props} />,
-    //   // ins: (props: TextProps) => <Text as="ins" {...props} />,
-    //   kbd: (props: TextProps) => <Text as="kbd" {...props} />,
-    //   mark: (props: TextProps) => <Text as="mark" {...props} />,
-    //   s: (props: TextProps) => <Text as="s" {...props} />,
-    //   samp: (props: TextProps) => <Text as="samp" {...props} />,
-    //   sub: (props: TextProps) => <Text as="sub" {...props} />,
-    //   sup: (props: TextProps) => <Text as="sup" {...props} />,
-    //   /*
-    //    * Lists.
-    //    */
-    //   ol: OrderedList,
-    //   ul: UnorderedList,
-    //   li: ListItem
-    // };
-
-    try {
-      // unified()
-      //   .use(remarkRehype)
-      //   .use(rehypeHightlight, { ignoreMissing: true, subset: false }) // 言語が見つからないエラーを無視、言語の推測を無効
-      //   .run(mdast, (error, transformedNode) => {
-      //     setHast(transformedNode);
-      //     if (error != null || transformedNode == null) {
-      //       console.log(error);
-      //     } else {
-      //       setContent(
-      //         unified()
-      //           .use(rehypeReact, { createElement, components })
-      //           .stringify(transformedNode as any)
-      //       );
-      //       setHtmlBody(
-      //         unified()
-      //           .use(rehypeStringify)
-      //           .stringify(transformedNode as any) as any
-      //       );
-      //     }
-      //   });
-    } catch (error) {
-      console.log(error);
-    }
-  }, [textOnEditor]);
+    md2Hast(initialTextOnEditor).then(setHast);
+  }, []);
 
   const insertFileIntoTextOnEditor = async (file: File) => {
     const title = crypto.randomUUID();
@@ -176,7 +92,7 @@ const Page: NextPage = () => {
     const link = downloadLinkRef.current;
     if (link != null) {
       const type = 'text/html;charset=utf-8';
-      const template = await (await fetch('/static-templates/index.html')).text();
+      const template = await (await fetch('/static-templates/template.html')).text();
       const html = template.replaceAll(
         /<script type="application\/json" id="app-source">.*<\/script>/g,
         `<script type="application/json" id="app-source">${JSON.stringify(hast)}</script>`
@@ -214,13 +130,28 @@ const Page: NextPage = () => {
                 defaultLanguage="markdown"
                 defaultValue=""
                 value={textOnEditor}
-                onChange={(value) => {
+                onChange={async (value) => {
                   setTextOnEditor(value ?? '');
+                  setHast(await md2Hast(value ?? ''));
                 }}
                 width="45vw"
                 height="80vh"
                 onMount={(editor) => {
                   editorRef.current = editor;
+                  editorRef.current.onDidChangeCursorPosition((event) => {
+                    if (event.source === 'mouse' || event.source === 'keyboard') {
+                      // const preview = previewRef.current;
+                      // if (preview != null) {
+                      //   const targetNode = preview.querySelector<HTMLElement>(
+                      //     `[data-md-position-start-line="${event.position.lineNumber}"]`
+                      //   );
+                      //   if (targetNode != null) {
+                      //     console.log([preview.scrollTop, targetNode.offsetTop, preview.offsetTop]);
+                      //     preview.scrollTop = targetNode.offsetTop - preview.offsetTop - preview.offsetHeight / 2;
+                      //   }
+                      // }
+                    }
+                  });
                 }}
               />
             </div>
@@ -228,8 +159,31 @@ const Page: NextPage = () => {
 
           <div>
             <p style={{ backgroundColor: '#eeeeee' }}>Rendered HTML</p>
-            <div style={{ height: '80vh', width: '45vw', overflow: 'auto' }}>
-              {hast == null ? null : <HastRenderer hast={hast} />}
+            <div style={{ height: '80vh', width: '45vw', overflow: 'auto' }} ref={(ref) => (previewRef.current = ref)}>
+              {hast == null ? null : (
+                <HastRenderer
+                  hast={hast.hast}
+                  // onElementClicked={() => {
+                  //   const editor = editorRef.current;
+                  //   if (editor != null) {
+                  //     const currentLine = editor.getPosition()?.lineNumber;
+                  //     if (currentLine !== line) {
+                  //       editor.setPosition({ lineNumber: line, column: 0 });
+                  //     }
+                  //     if (currentLine != null) {
+                  //       const visibleRanges = editor.getVisibleRanges() ?? [];
+                  //       const isCursorVisible = visibleRanges.some(
+                  //         ({ startLineNumber, endLineNumber }) =>
+                  //           startLineNumber <= currentLine && currentLine <= endLineNumber
+                  //       );
+                  //       if (!isCursorVisible) {
+                  //         editor.revealLineInCenter(line);
+                  //       }
+                  //     }
+                  //   }
+                  // }}
+                />
+              )}
             </div>
           </div>
         </div>

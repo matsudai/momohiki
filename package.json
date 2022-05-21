@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "clean": "rm -rf ./next ./out ./public/monaco-editor ./public/static-templates /tmp/.parcel-cache",
-    "dev": "concurrently \"parcel watch src/static/index.html --dist-dir public/static-templates --cache-dir /tmp/.parcel-cache --no-autoinstall\" \"next dev\"",
-    "build": "parcel build src/static/index.html --dist-dir public/static-templates --cache-dir /tmp/.parcel-cache --no-autoinstall && next build",
+    "clean": "rm -rf ./.next ./out ./public/monaco-editor ./public/static-templates /tmp/.parcel-cache",
+    "dev": "concurrently \"parcel watch src/static/template.html --dist-dir public/static-templates --cache-dir /tmp/.parcel-cache --no-autoinstall\" \"next dev\"",
+    "build": "parcel build src/static/template.html --dist-dir public/static-templates --cache-dir /tmp/.parcel-cache --no-autoinstall && next build",
     "export": "yarn build && next export",
     "start": "next start",
     "lint": "next lint"
