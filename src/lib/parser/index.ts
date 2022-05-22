@@ -129,11 +129,15 @@ const nodes: Partial<typeof Markdoc.nodes> = {
       const children = node.transformChildren(config);
       let content = node.attributes.content;
       const language = node.attributes.language ?? 'plaintext';
-      try {
-        content = `<code class="hljs language-${language}">${
-          hljs.highlight(content, { language: language ?? 'txt' }).value
-        }</code>`;
-      } catch {
+      if (hljs.getLanguage(language) != null) {
+        try {
+          content = `<code class="hljs language-${language}">${
+            hljs.highlight(content, { language: language ?? 'txt' }).value
+          }</code>`;
+        } catch {
+          content = `<code class="hljs language-plaintext">${content}</code>`;
+        }
+      } else {
         content = `<code class="hljs language-plaintext">${content}</code>`;
       }
       return new Markdoc.Tag('X-fence', { ...attributes, 'data-code': content }, children);
