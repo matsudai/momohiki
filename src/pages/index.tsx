@@ -94,7 +94,7 @@ const Page: NextPage = () => {
       const type = 'text/html;charset=utf-8';
       const template = await (await fetch('/static-templates/template.html')).text();
       const html = template.replaceAll(
-        /<script type="application\/json" id="app-source">.*<\/script>/g,
+        /<script type="application\/json" id="app-source"><\/script>/g,
         `<script type="application/json" id="app-source">${JSON.stringify(content)}</script>`
       );
       link.href = URL.createObjectURL(new Blob([html], { type }));
