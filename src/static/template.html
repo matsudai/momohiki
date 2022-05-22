@@ -12,8 +12,8 @@
     </style>
     <script type="module">
       import { createRoot } from 'react-dom/client';
-      import { ChakraProvider } from '@chakra-ui/react';
-      import { HastRenderer } from '../lib/renderer';
+      import { ChakraProvider, Box } from '@chakra-ui/react';
+      import { tree2component } from '../lib/renderer';
 
       const hastText = document.getElementById('app-source')?.textContent;
       const hast = hastText ? JSON.parse(hastText) : {};
@@ -21,9 +21,12 @@
       const container = document.getElementById('app');
       if (container) {
         const root = createRoot(container);
+        const component = tree2component(hast)
         root.render(
           <ChakraProvider>
-            <HastRenderer hast={hast.hast} />
+            <Box p="4">
+              {component}
+            </Box>
           </ChakraProvider>
         );
       }

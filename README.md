@@ -18,7 +18,6 @@ mkdir -p src/lib/renderer
 ```
 
 yarn add @chakra-ui/react @emotion/react@^11 @emotion/styled@^11 framer-motion@^6 @chakra-ui/icons react-icons
-yarn add unified remark-parse remark-gfm remark-rehype rehype-highlight rehype-react highlight.js
 
 ```txt
 mkdir -p src/static
@@ -38,3 +37,5 @@ yarn add -D concurrently
 yarn add @monaco-editor/react monaco-editor
 yarn add -D copy-webpack-plugin
 ```
+
+yarn add @markdoc/markdoc highlight.js

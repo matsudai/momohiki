@@ -1,56 +1,154 @@
-import remarkGfm from 'remark-gfm';
-import remarkParse from 'remark-parse';
-import remarkRehype from 'remark-rehype';
-import rehypeHightlight from 'rehype-highlight';
-import { unified } from 'unified';
-import { Root } from 'rehype-highlight/lib';
+import * as Markdoc from '@markdoc/markdoc';
+import hljs from 'highlight.js';
 
-const isHeading = (node: Root['children'][0]): node is Extract<Root['children'][0], { type: 'element' }> =>
-  node.type === 'element' && ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'].includes(node.tagName);
+const instantiateTransformer = (name: string) => (node: Markdoc.Node, config: Markdoc.Config) => {
+  const attributes = node.transformAttributes(config);
+  const children = node.transformChildren(config);
+  return new Markdoc.Tag(name, attributes, children);
+};
 
-const overwriteProps = (node: Root['children'][0], key: string) => {
-  if (isHeading(node)) {
-    let nodeProps = node.properties;
-    nodeProps = { ...nodeProps, 'data-x-key': key };
-    if (node.position != null) {
-      const pos = node.position.start;
-      nodeProps = { ...nodeProps, 'data-x-md-pos': JSON.stringify({ r: pos.line, c: pos.column }) };
+const nodes: Partial<typeof Markdoc.nodes> = {
+  /*
+   * Heading (4 - 6 are same level.)
+   */
+  heading: {
+    ...Markdoc.nodes.heading,
+    transform: (node, config) => {
+      const attributes = node.transformAttributes(config);
+      const children = node.transformChildren(config);
+      const level = node.attributes.level;
+      const name =
+        level === 1
+          ? 'X-h1'
+          : level === 2
+          ? 'X-h2'
+          : level === 3
+          ? 'X-h3'
+          : level === 4
+          ? 'X-h4'
+          : level === 5
+          ? 'X-h5'
+          : level === 6
+          ? 'X-h6'
+          : 'X-h1';
+      return new Markdoc.Tag(name, attributes, children);
     }
-    node.properties = nodeProps;
-    node.children.forEach((child, i) => overwriteProps(child, `${key}-${i}`));
-  }
-};
-
-const filterTokens = (n: Root['children'][0], tokens: string[] = []): string[] => {
-  if (n.type === 'text') {
-    return [...tokens, n.value];
-  } else if (n.type === 'element') {
-    return n.children.reduce((sum, child) => filterTokens(child, sum), tokens);
-  }
-  return tokens;
-};
-
-export const md2Hast = async (md: string) => {
-  const mdast = unified().use(remarkParse).use(remarkGfm).parse(md);
-  const hast = await unified()
-    .use(remarkRehype)
-    .use(rehypeHightlight, { ignoreMissing: true, subset: false }) // 言語が見つからないエラーを無視、言語の推測を無効
-    .use(() => (tree) => {
-      tree.children.forEach((node, i) => {
-        overwriteProps(node, i.toString());
-      });
-    })
-    .run(mdast);
-
-  let index: { key: string; text: string }[] = [];
-  hast.children.forEach((node) => {
-    if (isHeading(node)) {
-      const key = node.properties?.['data-x-key'];
-      if (typeof key === 'string') {
-        index.push({ key, text: filterTokens(node).join('') });
+  },
+  /*
+   * Link.
+   */
+  link: {
+    ...Markdoc.nodes.link,
+    transform: instantiateTransformer('X-a')
+  },
+  /*
+   * Table.
+   */
+  table: {
+    ...Markdoc.nodes.table,
+    transform: instantiateTransformer('X-table')
+  },
+  thead: {
+    ...Markdoc.nodes.thead,
+    transform: instantiateTransformer('X-thead')
+  },
+  tbody: {
+    ...Markdoc.nodes.tbody,
+    transform: instantiateTransformer('X-tbody')
+  },
+  tr: {
+    ...Markdoc.nodes.tr,
+    transform: instantiateTransformer('X-tr')
+  },
+  th: {
+    ...Markdoc.nodes.th,
+    transform: instantiateTransformer('X-th')
+  },
+  td: {
+    ...Markdoc.nodes.td,
+    transform: instantiateTransformer('X-td')
+  },
+  /*
+   * Paragraph.
+   */
+  paragraph: {
+    ...Markdoc.nodes.paragraph,
+    transform: instantiateTransformer('X-p')
+  },
+  em: {
+    ...Markdoc.nodes.em,
+    transform: instantiateTransformer('X-em')
+  },
+  s: {
+    ...Markdoc.nodes.s,
+    transform: instantiateTransformer('X-s')
+  },
+  strong: {
+    ...Markdoc.nodes.strong,
+    transform: instantiateTransformer('X-strong')
+  },
+  blockquote: {
+    ...Markdoc.nodes.blockquote,
+    transform: instantiateTransformer('X-blockquote')
+  },
+  /*
+   * Lists.
+   */
+  list: {
+    ...Markdoc.nodes.list,
+    transform: (node, config) => {
+      const attributes = node.transformAttributes(config);
+      const children = node.transformChildren(config);
+      const ordered = node.attributes.ordered;
+      const name = ordered ? 'X-ol' : 'X-ul';
+      return new Markdoc.Tag(name, attributes, children);
+    }
+  },
+  item: {
+    ...Markdoc.nodes.item,
+    transform: instantiateTransformer('X-li')
+  },
+  /*
+   * Horizontal Separator.
+   */
+  hr: {
+    ...Markdoc.nodes.hr,
+    transform: instantiateTransformer('X-hr')
+  },
+  /*
+   * Image
+   */
+  image: {
+    ...Markdoc.nodes.image,
+    transform: instantiateTransformer('X-img')
+  },
+  fence: {
+    ...Markdoc.nodes.fence,
+    transform: (node, config) => {
+      const attributes = node.transformAttributes(config);
+      const children = node.transformChildren(config);
+      let content = node.attributes.content;
+      const language = node.attributes.language ?? 'plaintext';
+      try {
+        content = `<code class="hljs language-${language}">${
+          hljs.highlight(content, { language: language ?? 'txt' }).value
+        }</code>`;
+      } catch {
+        content = `<code class="hljs language-plaintext">${content}</code>`;
       }
+      return new Markdoc.Tag('X-fence', { ...attributes, 'data-code': content }, children);
     }
-  });
-
-  return { hast, index };
+  },
+  code: {
+    ...Markdoc.nodes.code,
+    transform: (node, config) => {
+      const attributes = node.transformAttributes(config);
+      const children = node.transformChildren(config);
+      return new Markdoc.Tag('X-code', attributes, [node.attributes.content, ...children]);
+    }
+  }
 };
+
+export const md2ast = (md: string) => Markdoc.parse(md);
+
+export const ast2tree = (ast: Markdoc.Node) => Markdoc.transform(ast, { nodes });

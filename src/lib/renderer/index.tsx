@@ -1,7 +1,14 @@
 import { ExternalLinkIcon } from '@chakra-ui/icons';
 import {
+  Box,
+  Code,
+  CodeProps,
+  Divider,
+  DividerProps,
   Heading,
   HeadingProps,
+  Image,
+  ImageProps,
   Link,
   LinkProps,
   ListItem,
@@ -24,95 +31,70 @@ import {
   Tr,
   UnorderedList
 } from '@chakra-ui/react';
-import { createElement, FC, useCallback, useMemo } from 'react';
-import rehypeReact from 'rehype-react';
-import { unified } from 'unified';
+import * as Markdoc from '@markdoc/markdoc';
+import React, { HTMLAttributes } from 'react';
 
-type HastRendererProps = {
-  hast: any;
-};
-
-export const HastRenderer: FC<HastRendererProps> = ({ hast }) => {
-  // const clickEvent = useCallback(
-  //   (props: { [key: string]: any }) => (event: MouseEvent<HTMLElement>) => {
-  //     event.preventDefault();
-  //     event.stopPropagation();
-  //     try {
-  //       const pos = JSON.parse(props['data-md-position-start']);
-  //       console.log(pos);
-  //       if (typeof pos.line === 'number' && typeof pos.column === 'number') {
-  //         // onElementClicked?.({ position: { start: pos } });
-  //       }
-  //     } catch (e) {
-  //       console.error(e);
-  //     }
-  //   },
-  //   []
-  // );
-
-  const components = useMemo(
-    () => ({
-      /*
-       * Heading (4 - 6 are same level.)
-       */
-      h1: (props: HeadingProps) => <Heading as="h1" size="2xl" {...props} />,
-      h2: (props: HeadingProps) => <Heading as="h2" size="xl" {...props} />,
-      h3: (props: HeadingProps) => <Heading as="h3" size="lg" {...props} />,
-      h4: (props: HeadingProps) => <Heading as="h4" size="md" {...props} />,
-      h5: (props: HeadingProps) => <Heading as="h5" size="md" {...props} />,
-      h6: (props: HeadingProps) => <Heading as="h6" size="md" {...props} />,
-      /*
-       * Link.
-       */
-      a: ({ children, ...props }: LinkProps) => (
-        <Link isExternal {...props}>
-          {children}
-          <ExternalLinkIcon mx="2px" />
-        </Link>
+export const tree2component = (node: Markdoc.RenderableTreeNode) => {
+  return Markdoc.renderers.react(node, React, {
+    components: {
+      'X-h1': (props: HeadingProps) => <Heading as="h1" pt="4" pb="2" size="2xl" {...props} />,
+      'X-h2': (props: HeadingProps) => <Heading as="h2" pt="4" pb="2" size="xl" {...props} />,
+      'X-h3': (props: HeadingProps) => <Heading as="h3" pt="4" pb="2" size="lg" {...props} />,
+      'X-h4': (props: HeadingProps) => <Heading as="h4" pt="4" pb="2" size="md" {...props} />,
+      'X-h5': (props: HeadingProps) => <Heading as="h5" pt="4" pb="2" size="md" {...props} />,
+      'X-h6': (props: HeadingProps) => <Heading as="h6" pt="4" pb="2" size="md" {...props} />,
+      'X-a': ({ children, ...props }: LinkProps) => (
+        <>
+          {props.href?.match(/^[^#]/g) ? (
+            <Link isExternal {...props}>
+              {children}
+              <ExternalLinkIcon mx="2px" />
+            </Link>
+          ) : (
+            <Link {...props}>{children}</Link>
+          )}
+        </>
       ),
-      /*
-       * Table.
-       */
-      table: (props: TableProps) => <Table {...props} />,
-      thead: (props: TableHeadProps) => <Thead {...props} />,
-      tbody: (props: TableBodyProps) => <Tbody {...props} />,
-      tr: (props: TableRowProps) => <Tr {...props} />,
-      th: (props: TableColumnHeaderProps) => <Th {...props} />,
-      td: (props: TableCellProps) => <Td {...props} />,
-      /*
-       * Paragraph.
-       */
-      p: (props: TextProps) => <Text {...props} />,
-      /*
-       * Word in paragraph.
-       */
-      i: (props: TextProps) => <Text as="i" {...props} />,
-      u: (props: TextProps) => <Text as="u" {...props} />,
-      abbr: (props: TextProps) => <Text as="abbr" {...props} />,
-      cite: (props: TextProps) => <Text as="cite" {...props} />,
-      // del: (props: TextProps) => <Text as="del" {...props}  />,
-      em: (props: TextProps) => <Text as="em" {...props} />,
-      // ins: (props: TextProps) => <Text as="ins" {...props}  />,
-      kbd: (props: TextProps) => <Text as="kbd" {...props} />,
-      mark: (props: TextProps) => <Text as="mark" {...props} />,
-      s: (props: TextProps) => <Text as="s" {...props} />,
-      samp: (props: TextProps) => <Text as="samp" {...props} />,
-      sub: (props: TextProps) => <Text as="sub" {...props} />,
-      sup: (props: TextProps) => <Text as="sup" {...props} />,
-      /*
-       * Lists.
-       */
-      ol: (props: ListProps) => <OrderedList {...props} />,
-      ul: (props: ListProps) => <UnorderedList {...props} />,
-      li: (props: ListItemProps) => <ListItem {...props} />
-    }),
-    []
-  );
-
-  const Content = useMemo(
-    () => unified().use(rehypeReact, { createElement, components }).stringify(hast),
-    [hast, components]
-  );
-
-  return <div>{Content}</div>;
+      'X-table': (props: TableProps) => (
+        <Box pt="2" pb="4">
+          <Table size="sm" {...props} />
+        </Box>
+      ),
+      'X-thead': (props: TableHeadProps) => <Thead {...props} />,
+      'X-tbody': (props: TableBodyProps) => <Tbody {...props} />,
+      'X-tr': (props: TableRowProps) => <Tr {...props} />,
+      'X-th': (props: TableColumnHeaderProps) => <Th {...props} />,
+      'X-td': (props: TableCellProps) => <Td {...props} />,
+      'X-p': (props: TextProps) => <Text py="2" {...props} />,
+      'X-em': (props: TextProps) => <Text as="em" {...props} />,
+      'X-s': (props: TextProps) => <Text as="s" {...props} />,
+      'X-strong': (props: TextProps) => <Text as="strong" {...props} />,
+      'X-blockquote': (props: TextProps) => (
+        <Text
+          as="blockquote"
+          {...props}
+          fontStyle="italic"
+          fontWeight="semibold"
+          pl="4"
+          borderStartWidth="thick"
+          borderColor="gray.200"
+          color="gray.600"
+        />
+      ),
+      'X-ol': (props: ListProps) => <OrderedList {...props} />,
+      'X-ul': (props: ListProps) => <UnorderedList {...props} />,
+      'X-li': (props: ListItemProps) => <ListItem {...props} />,
+      'X-hr': (props: DividerProps) => <Divider {...props} />,
+      // eslint-disable-next-line jsx-a11y/alt-text
+      'X-img': (props: ImageProps) => <Image {...props} />,
+      'X-code': (props: CodeProps) => <Code {...props} />,
+      'X-fence': ({
+        'data-code': __html,
+        children,
+        ...props
+      }: HTMLAttributes<HTMLPreElement> & { 'data-code': string }) => {
+        return <pre {...props} dangerouslySetInnerHTML={{ __html }} />;
+      }
+    }
+  });
 };

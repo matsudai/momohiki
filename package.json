@@ -15,6 +15,7 @@
     "@chakra-ui/react": "^2.0.0",
     "@emotion/react": "^11",
     "@emotion/styled": "^11",
+    "@markdoc/markdoc": "^0.1.2",
     "@monaco-editor/react": "^4.4.5",
     "framer-motion": "^6",
     "highlight.js": "^11.5.1",
@@ -22,13 +23,7 @@
     "next": "12.1.6",
     "react": "18.1.0",
     "react-dom": "18.1.0",
-    "react-icons": "^4.3.1",
-    "rehype-highlight": "^5.0.2",
-    "rehype-react": "^7.1.1",
-    "remark-gfm": "^3.0.1",
-    "remark-parse": "^10.0.1",
-    "remark-rehype": "^10.1.0",
-    "unified": "^10.1.2"
+    "react-icons": "^4.3.1"
   },
   "devDependencies": {
     "@parcel/config-default": "^2.5.0",
