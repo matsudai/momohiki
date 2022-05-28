@@ -9,7 +9,14 @@ const instantiateTransformer = (name: string) => (node: Markdoc.Node, config: Ma
 
 const nodes: Partial<typeof Markdoc.nodes> = {
   /*
-   * Heading (4 - 6 are same level.)
+   * Toplevel Article.
+   */
+  document: {
+    ...Markdoc.nodes.document,
+    transform: instantiateTransformer('X-article')
+  },
+  /*
+   * Heading. (4 - 6 are same level.)
    */
   heading: {
     ...Markdoc.nodes.heading,
@@ -153,6 +160,55 @@ const nodes: Partial<typeof Markdoc.nodes> = {
   }
 };
 
-export const md2ast = (md: string) => Markdoc.parse(md);
+export const md2ast = (md: string) => {
+  const ast = Markdoc.parse(md);
+  return ast;
+};
 
-export const ast2tree = (ast: Markdoc.Node) => Markdoc.transform(ast, { nodes });
+const mergeStringNodeRecursive = (node: Markdoc.RenderableTreeNode, value?: string): string | undefined => {
+  if (node == null) {
+    return value;
+  } else if (typeof node === 'string') {
+    return `${value ?? ''}${node}`;
+  } else {
+    return node.children.reduce((sum, child) => mergeStringNodeRecursive(child, sum), value);
+  }
+};
+
+export const parseToc = (
+  tree: Markdoc.RenderableTreeNode,
+  toc?: { level: 1 | 2 | 3 | 4 | 5 | 6; title: string }[]
+): { level: 1 | 2 | 3 | 4 | 5 | 6; title: string }[] => {
+  toc = toc ?? [];
+
+  if (tree == null || typeof tree == 'string') {
+    return toc;
+  }
+
+  const level =
+    tree.name === 'X-h1'
+      ? 1
+      : tree.name === 'X-h2'
+      ? 2
+      : tree.name === 'X-h3'
+      ? 3
+      : tree.name === 'X-h4'
+      ? 4
+      : tree.name === 'X-h5'
+      ? 5
+      : tree.name === 'X-h6'
+      ? 6
+      : null;
+
+  if (level != null) {
+    const title = mergeStringNodeRecursive(tree);
+    return tree.children.reduce((sum, child) => parseToc(child, sum), title == null ? toc : [...toc, { level, title }]);
+  } else {
+    return tree.children.reduce((sum, child) => parseToc(child, sum), toc);
+  }
+};
+
+export const ast2tree = (ast: Markdoc.Node, config?: Markdoc.Config) => {
+  const tree = Markdoc.transform(ast, { nodes, ...config });
+  return tree;
+};

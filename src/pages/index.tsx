@@ -1,8 +1,19 @@
 import type { NextPage } from 'next';
 import { ClipboardEventHandler, DragEventHandler, SyntheticEvent, useEffect, useMemo, useRef, useState } from 'react';
 import Editor, { loader } from '@monaco-editor/react';
-import { Box } from '@chakra-ui/react';
-import { ast2tree, md2ast } from '../lib/parser';
+import {
+  Box,
+  Drawer,
+  DrawerBody,
+  DrawerCloseButton,
+  DrawerContent,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerOverlay,
+  Stack,
+  useDisclosure
+} from '@chakra-ui/react';
+import { ast2tree, md2ast, parseToc } from '../lib/parser';
 import { tree2component } from '../lib/renderer';
 
 loader.config({ paths: { vs: '/monaco-editor/min/vs' } });
@@ -16,11 +27,13 @@ const Page: NextPage = () => {
   const editorRef = useRef<EditorInstance | null>(null);
   const previewRef = useRef<HTMLDivElement | null>(null);
   const downloadLinkRef = useRef<HTMLAnchorElement | null>(null);
-  const [content, component] = useMemo(() => {
+  const { isOpen, onClose, onOpen } = useDisclosure();
+  const [content, component, toc] = useMemo(() => {
     const ast = md2ast(textOnEditor);
-    const content = ast2tree(ast);
+    const content = ast2tree(ast, { partials: { './topics/sample.markdoc': md2ast('## T2\n\nvvvvv\n') } });
     const component = tree2component(content);
-    return [content, component];
+    const toc = parseToc(content);
+    return [content, component, toc];
   }, [textOnEditor]);
 
   const insertFileIntoTextOnEditor = async (file: File) => {
@@ -107,6 +120,23 @@ const Page: NextPage = () => {
 
   return (
     <div>
+      <Drawer {...{ isOpen, onClose, onOpen }}>
+        <DrawerOverlay />
+        <DrawerContent>
+          <DrawerCloseButton />
+          <DrawerHeader>Table of Contents</DrawerHeader>
+          <DrawerBody>
+            <Stack direction="column">
+              {toc.map(({ level, title }, i) => (
+                <Box key={i} pl={4 * level}>
+                  {title}
+                </Box>
+              ))}
+            </Stack>
+          </DrawerBody>
+          <DrawerFooter></DrawerFooter>
+        </DrawerContent>
+      </Drawer>
       <main>
         <div>
           <p style={{ backgroundColor: '#eeeeee' }}>Control</p>
@@ -118,6 +148,9 @@ const Page: NextPage = () => {
               Download HTML
             </button>
           </div>
+          <button type="button" onClick={onOpen}>
+            ToC
+          </button>
           <div style={{ display: 'none' }}>
             <a ref={downloadLinkRef}></a>
           </div>
@@ -159,7 +192,7 @@ const Page: NextPage = () => {
           <div>
             <p style={{ backgroundColor: '#eeeeee' }}>Rendered HTML</p>
             <div style={{ height: '80vh', width: '45vw', overflow: 'auto' }} ref={(ref) => (previewRef.current = ref)}>
-              <Box w="45vw" h="80vh" overflow="auto" p="4">
+              <Box w="45vw" h="80vh" overflow="auto" p="2">
                 {component}
               </Box>
               {/* {hast == null ? null : (

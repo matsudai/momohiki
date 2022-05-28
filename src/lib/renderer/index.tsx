@@ -1,6 +1,5 @@
 import { ExternalLinkIcon } from '@chakra-ui/icons';
 import {
-  Box,
   Code,
   CodeProps,
   Divider,
@@ -15,6 +14,8 @@ import {
   ListItemProps,
   ListProps,
   OrderedList,
+  Stack,
+  StackProps,
   Table,
   TableBodyProps,
   TableCellProps,
@@ -37,12 +38,13 @@ import React, { HTMLAttributes } from 'react';
 export const tree2component = (node: Markdoc.RenderableTreeNode) => {
   return Markdoc.renderers.react(node, React, {
     components: {
-      'X-h1': (props: HeadingProps) => <Heading as="h1" pt="4" pb="2" size="2xl" {...props} />,
-      'X-h2': (props: HeadingProps) => <Heading as="h2" pt="4" pb="2" size="xl" {...props} />,
-      'X-h3': (props: HeadingProps) => <Heading as="h3" pt="4" pb="2" size="lg" {...props} />,
-      'X-h4': (props: HeadingProps) => <Heading as="h4" pt="4" pb="2" size="md" {...props} />,
-      'X-h5': (props: HeadingProps) => <Heading as="h5" pt="4" pb="2" size="md" {...props} />,
-      'X-h6': (props: HeadingProps) => <Heading as="h6" pt="4" pb="2" size="md" {...props} />,
+      'X-article': (props: StackProps) => <Stack direction="column" spacing="2" {...props} />,
+      'X-h1': (props: HeadingProps) => <Heading as="h1" size="2xl" {...props} />,
+      'X-h2': (props: HeadingProps) => <Heading as="h2" size="xl" {...props} />,
+      'X-h3': (props: HeadingProps) => <Heading as="h3" size="lg" {...props} />,
+      'X-h4': (props: HeadingProps) => <Heading as="h4" size="md" {...props} />,
+      'X-h5': (props: HeadingProps) => <Heading as="h5" size="md" {...props} />,
+      'X-h6': (props: HeadingProps) => <Heading as="h6" size="md" {...props} />,
       'X-a': ({ children, ...props }: LinkProps) => (
         <>
           {props.href?.match(/^[^#]/g) ? (
@@ -55,17 +57,13 @@ export const tree2component = (node: Markdoc.RenderableTreeNode) => {
           )}
         </>
       ),
-      'X-table': (props: TableProps) => (
-        <Box pt="2" pb="4">
-          <Table size="sm" {...props} />
-        </Box>
-      ),
+      'X-table': (props: TableProps) => <Table size="sm" {...props} />,
       'X-thead': (props: TableHeadProps) => <Thead {...props} />,
       'X-tbody': (props: TableBodyProps) => <Tbody {...props} />,
       'X-tr': (props: TableRowProps) => <Tr {...props} />,
       'X-th': (props: TableColumnHeaderProps) => <Th {...props} />,
       'X-td': (props: TableCellProps) => <Td {...props} />,
-      'X-p': (props: TextProps) => <Text py="2" {...props} />,
+      'X-p': (props: TextProps) => <Text {...props} />,
       'X-em': (props: TextProps) => <Text as="em" {...props} />,
       'X-s': (props: TextProps) => <Text as="s" {...props} />,
       'X-strong': (props: TextProps) => <Text as="strong" {...props} />,
