@@ -13,3 +13,15 @@ yarn create next-app momohiki --typescript
 +     "export": "next build && next export",
       "start": "next start",
 ```
+
+### Prettier
+
+- .vscode/settings.json
+- .devcontainer/devcontainer.json
+- .prettierrc
+- .prettierignore
+
+```diff
+      "lint": "next lint",
++     "format": "prettier --write ."
+```
