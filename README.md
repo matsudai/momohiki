@@ -99,3 +99,15 @@ yarn tailwindcss init -p
 + @tailwind components;
 + @tailwind utilities;
 ```
+
+### Concurrent script
+
+```sh
+yarn add -D concurrently
+```
+
+```diff
+-     "dev": "next dev",
++     "dev": "concurrently \"dev:editor\" \"dev:viewer\"",
++     "dev:editor": "next dev",
+```

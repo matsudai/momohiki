@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "concurrently \"yarn dev:editor\" \"yarn dev:viewer\"",
+    "dev:editor": "next dev",
     "dev:viewer": "parcel viewer/template.html --dist-dir public/viewer --cache-dir /tmp/.parcel-cache",
     "build": "next build",
     "export": "next build && next export",
@@ -24,6 +25,7 @@
     "@types/react": "18.0.15",
     "@types/react-dom": "18.0.6",
     "autoprefixer": "^10.4.7",
+    "concurrently": "^7.3.0",
     "eslint": "8.20.0",
     "eslint-config-next": "12.2.3",
     "parcel": "^2.6.2",
