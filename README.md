@@ -77,3 +77,25 @@ import { FC } from 'react';
 
 export const App: FC<{}> = () => <div>OK</div>;
 ```
+
+### Tailwind
+
+```sh
+yarn add -D tailwindcss postcss autoprefixer
+yarn tailwindcss init -p
+```
+
+- tailwind.config.js
+
+```diff
+-   content: [],
++   content: ['./pages/**/*.{js,ts,jsx,tsx}', './components/**/*.{js,ts,jsx,tsx}'],
+```
+
+- global.css
+
+```diff
++ @tailwind base;
++ @tailwind components;
++ @tailwind utilities;
+```
