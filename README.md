@@ -25,3 +25,55 @@ yarn create next-app momohiki --typescript
       "lint": "next lint",
 +     "format": "prettier --write ."
 ```
+
+### Parcel (Viewer)
+
+```sh
+yarn add -D parcel @parcel/config-default @parcel/transformer-typescript-tsc @parcel/validator-typescript
+```
+
+- .gitignore (/public/viewer/template.html)
+- .prettierignore (/public/viewer/template.html)
+- .parcelrc
+
+- package.json
+
+```diff
++     "dev:viewer": "parcel viewer/template.html --dist-dir public/viewer --cache-dir /tmp/.parcel-cache",
+```
+
+- viewer/template.html
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>My Parcel App</title>
+  </head>
+  <body>
+    <div id="app">...loading...</div>
+
+    <script type="module">
+      import { createRoot } from 'react-dom/client';
+      import { App } from './template.tsx';
+
+      document.addEventListener('DOMContentLoaded', () => {
+        const container = document.getElementById('app');
+        if (container) {
+          const root = createRoot(container);
+          root.render(<App />);
+        }
+      });
+    </script>
+  </body>
+</html>
+```
+
+- viewer/template.tsx
+
+```tsx
+import { FC } from 'react';
+
+export const App: FC<{}> = () => <div>OK</div>;
+```
