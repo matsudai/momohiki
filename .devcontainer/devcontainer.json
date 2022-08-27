@@ -4,7 +4,8 @@
     "dockerfile": "./Dockerfile"
   },
   "extensions": [
-    "dbaeumer.vscode-eslint"
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode"
   ],
   "postCreateCommand": "yarn install",
   "remoteUser": "node"

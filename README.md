@@ -40,3 +40,55 @@ rm -rf momohiki
   "postCreateCommand": "yarn install",
 ```
 
+## Prettier
+
+```sh
+yarn add -D prettier
+```
+
+- .vscode/settings.json
+
+```diff
++ "editor.formatOnSave": false,
++ "[typescript]": {
++   "editor.defaultFormatter": "esbenp.prettier-vscode",
++   "editor.formatOnSave": true
++ },
++ "[typescriptreact]": {
++   "editor.defaultFormatter": "esbenp.prettier-vscode",
++   "editor.formatOnSave": true
++ },
++ "[javascript]": {
++   "editor.defaultFormatter": "esbenp.prettier-vscode",
++   "editor.formatOnSave": true
++ },
++ "[javascriptreact]": {
++   "editor.defaultFormatter": "esbenp.prettier-vscode",
++   "editor.formatOnSave": true
++ },
++ "[css]": {
++   "editor.defaultFormatter": "esbenp.prettier-vscode",
++   "editor.formatOnSave": true
++ }
+```
+
+- .devcontainer/devcontainer.json
+
+```diff
+  "extensions": [
+-   "dbaeumer.vscode-eslint"
++   "dbaeumer.vscode-eslint",
++   "esbenp.prettier-vscode"
+  ],
+```
+
+- .prettierrc
+- .prettierignore
+
+- package.json
+
+```diff
+- "lint": "next lint"
++ "lint": "next lint",
++ "fmt": "prettier --write ."
+```
