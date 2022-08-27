@@ -40,7 +40,7 @@ rm -rf momohiki
   "postCreateCommand": "yarn install",
 ```
 
-## Prettier
+### Prettier
 
 ```sh
 yarn add -D prettier
@@ -91,4 +91,39 @@ yarn add -D prettier
 - "lint": "next lint"
 + "lint": "next lint",
 + "fmt": "prettier --write ."
+```
+
+### Tailwind
+
+- https://tailwindcss.com/docs/guides/nextjs
+
+```sh
+yarn add -D tailwindcss postcss autoprefixer
+yarn tailwindcss init -p
+```
+
+- .devcontainer/devcontainer.json
+
+```diff
+  "extensions": [
+    "dbaeumer.vscode-eslint"
+-   "esbenp.prettier-vscode"
++   "esbenp.prettier-vscode",
++   "bradlc.vscode-tailwindcss"
+  ],
+```
+
+- tailwind.config.js
+
+```diff
+-   content: [],
++   content: ['./pages/**/*.{js,ts,jsx,tsx}', './components/**/*.{js,ts,jsx,tsx}'],
+```
+
+- global.css
+
+```diff
++ @tailwind base;
++ @tailwind components;
++ @tailwind utilities;
 ```
