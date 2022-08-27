@@ -3,7 +3,9 @@
   "build": {
     "dockerfile": "./Dockerfile"
   },
-  "extensions": [],
-  // "postCreateCommand": "yarn install",
+  "extensions": [
+    "dbaeumer.vscode-eslint"
+  ],
+  "postCreateCommand": "yarn install",
   "remoteUser": "node"
 }
