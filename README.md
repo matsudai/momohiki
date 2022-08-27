@@ -127,3 +127,29 @@ yarn tailwindcss init -p
 + @tailwind components;
 + @tailwind utilities;
 ```
+
+### SSG Production
+
+```sh
+yarn add -D serve
+```
+
+- package.json
+
+```diff
+- "fmt": "prettier --write ."
++ "fmt": "prettier --write .",
++ "serve": "serve out"
+```
+
+- next.config.js
+
+```diff
+- swcMinify: true
++ swcMinify: true,
++ experimental: {
++   images: {
++     unoptimized: true
++   }
++ }
+```
