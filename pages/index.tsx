@@ -8,6 +8,7 @@ import remarkRehype from 'remark-rehype';
 import rehypeHighlight from 'rehype-highlight';
 import rehypeReact from 'rehype-react';
 import rehypeSanitize from 'rehype-sanitize';
+import { Editor } from '../components/Editor';
 
 const p: FC<DetailedHTMLProps<HTMLAttributes<HTMLParagraphElement>, HTMLParagraphElement>> = (props) => {
   return <p className="text-red-500" {...props} />;
@@ -49,6 +50,7 @@ const Home: NextPage = () => {
       </Head>
 
       <main>
+        <Editor />
         <textarea value={data.text} onChange={({ target: { value: text } }) => setData((data) => ({ ...data, text }))} />
         {data.content}
       </main>

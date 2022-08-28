@@ -255,3 +255,11 @@ yarn add -D unified remark-gfm rehype-highlight remark-parse rehype-react remark
 +   {data.content}
   </main>
 ```
+
+### Monaco Editor (UNOFFICIAL)
+
+!! Official Monaco Editor cannot be used on Next.js.
+
+```sh
+yarn add -D @monaco-editor/react
+```
