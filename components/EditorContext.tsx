@@ -6,6 +6,7 @@ import remarkGfm from 'remark-gfm';
 import remarkParse from 'remark-parse';
 import remarkRehype from 'remark-rehype';
 import { unified } from 'unified';
+import * as components from './md-components';
 
 export const formatter = unified()
   .use(remarkParse)
@@ -13,7 +14,7 @@ export const formatter = unified()
   .use(remarkRehype)
   .use(rehypeSanitize)
   .use(rehypeHighlight)
-  .use(rehypeReact, { createElement, Fragment, components: {} });
+  .use(rehypeReact, { createElement, Fragment, components });
 
 export interface IData {
   text: string;
