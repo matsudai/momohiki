@@ -171,3 +171,87 @@ yarn add -D serve
 +   }
 + }
 ```
+
+### remark/rehype
+
+- Base
+    - unified
+- Remark
+    - remark-gfm
+    - remark-parse
+    - remark-rehype
+- Rehype
+    - rehype-highlight
+    - rehype-react
+    - rehype-sanitize
+
+```sh
+yarn add -D unified remark-gfm rehype-highlight remark-parse rehype-react remark-rehype rehype-sanitize
+```
+
+- Copy `node_modules/highlight.js/styles/default.css` -> `styles/globals.css`
+
+```diff
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
++ /*!
++   Theme: Default
++   Description: Original highlight.js style
++   Author: (c) Ivan Sagalaev <maniac@softwaremaniacs.org>
++   Maintainer: @highlightjs/core-team
++   Website: https://highlightjs.org/
++   License: see project LICENSE
++   Touched: 2021
++ */
++ pre code.hljs { ...
+```
+
+- pages/index.tsx
+
+```diff
++ import { createElement, DetailedHTMLProps, FC, Fragment, HTMLAttributes, ReactNode, useEffect, useState } from 'react';
++ import { unified } from 'unified';
++ import remarkGfm from 'remark-gfm';
++ import rehypeHighlight from 'rehype-highlight';
++ import remarkParse from 'remark-parse';
++ import rehypeReact from 'rehype-react';
++ import remarkRehype from 'remark-rehype';
++ import rehypeSanitize from 'rehype-sanitize';
++
++ const formatter = unified()
++   .use(remarkParse)
++   .use(remarkGfm)
++   .use(remarkRehype)
++   .use(rehypeSanitize)
++   .use(rehypeHighlight)
++   .use(rehypeReact, { createElement, Fragment, components: {} });
++
++ interface IData {
++   text: string;
++   mdast?: ReturnType<typeof formatter['parse']>;
++   hast?: Awaited<ReturnType<typeof formatter['run']>>;
++   content?: ReactNode;
++ }
+
+// ...
+
++ const [data, setData] = useState<IData>({ text: '' });
++
++ useEffect(() => {
++   const mdast = formatter.parse(data.text);
++   formatter.run(mdast).then((hast) => {
++     const content = formatter.stringify(hast);
++     setData((data) => ({ ...data, mdast, hast, content }));
++     console.log(JSON.stringify(hast, null, 2));
++   });
++ }, [data.text]);
+
+// ...
+
+  <main>
++   <textarea value={data.text} onChange={({ target: { value: text } }) => setData((data) => ({ ...data, text }))} />
++   {data.content}
+  </main>
+```
