@@ -126,6 +126,24 @@ yarn tailwindcss init -p
 + @tailwind base;
 + @tailwind components;
 + @tailwind utilities;
+-
+- ...
+```
+
+#### SSG Production
+
+Prepare download html refs `public/output.css` .
+
+- package.json
+
+```diff
+  "dev": "next dev",
+- "build": "next build",
+- "export": "next build && next export",
++ "build": "next build && yarn build-css",
++ "build-css": "postcss styles/globals.css --config postcss.config.js -o public/output.css",
++ "export": "yarn build && next export",
+  "start": "next start",
 ```
 
 ### SSG Production
