@@ -17,7 +17,9 @@ const Home: NextPage = () => {
       <main>
         <EditorContextProvider>
           <Editor />
-          <Preview />
+          <div className="p-4">
+            <Preview />
+          </div>
           <DownloadButton />
         </EditorContextProvider>
       </main>

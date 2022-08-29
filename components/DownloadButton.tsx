@@ -21,7 +21,9 @@ export const DownloadButton: FC = () => {
             <style dangerouslySetInnerHTML={{ __html: css }} />
           </head>
           <body>
-            <main>{data.content}</main>
+            <main>
+              <div className="p-4">{data.content}</div>
+            </main>
           </body>
         </html>
       );
