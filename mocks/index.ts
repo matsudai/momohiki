@@ -1,8 +1,14 @@
+import { loadFile } from '../lib/persist';
 import { rest, setupWorker as setupMsw } from 'msw';
 
 const handlers = [
-  rest.get('/mocks/xxx', (req, res, ctx) => {
-    return res(ctx.status(200), ctx.body('API response.'));
+  rest.get('/mocks/sample.png', async (req, res, ctx) => {
+    const file = await loadFile();
+    if (file) {
+      return res(ctx.status(200), ctx.body(new Blob([file.data], { type: file.type })));
+    } else {
+      return res(ctx.status(404));
+    }
   })
 ];
 

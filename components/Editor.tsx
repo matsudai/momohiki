@@ -1,5 +1,6 @@
 import MonacoEditor, { OnMount } from '@monaco-editor/react';
 import { ClipboardEventHandler, DragEventHandler, FC, SyntheticEvent, useCallback, useRef } from 'react';
+import { saveFile } from '../lib/persist';
 import { useEditorState, useEditorTextState } from '../lib/storage';
 
 type EditorInstance = Parameters<OnMount>[0];
@@ -33,16 +34,20 @@ export const Editor: FC = () => {
   const insertFile = async (file: File) => {
     const title = crypto.randomUUID();
     if (file.type === 'image/png') {
-      const buffer = await new Promise<string>((resolve, reject) => {
-        const ifs = new FileReader();
-        ifs.readAsDataURL(file);
-        ifs.onload = () => {
-          typeof ifs.result === 'string' ? resolve(ifs.result) : reject('Type Error');
-        };
-        ifs.onerror = reject;
-      });
+      // const buffer = await new Promise<string>((resolve, reject) => {
+      //   const ifs = new FileReader();
+      //   ifs.readAsDataURL(file);
+      //   ifs.onload = () => {
+      //     typeof ifs.result === 'string' ? resolve(ifs.result) : reject('Type Error');
+      //   };
+      //   ifs.onerror = reject;
+      // });
+      const { type, name } = file;
+      const data = await file.arrayBuffer();
+      const hash = await saveFile({ name, type, data });
 
-      insertText(`![${title}](${buffer})`);
+      // insertText(`![${title}](${buffer})`);
+      insertText(`![${title}](./mocks/sample.png?${hash})`);
     }
   };
 
