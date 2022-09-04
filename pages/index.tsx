@@ -14,15 +14,21 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main>
-        <EditorContextProvider>
-          <Editor />
-          <div className="p-4">
-            <Preview />
+      <EditorContextProvider>
+        <main className="w-full flex flex-col">
+          <div className="flex-grow-0 h-[4rem]">
+            <DownloadButton />
           </div>
-          <DownloadButton />
-        </EditorContextProvider>
-      </main>
+          <div className="flex-grow flex flex-row h-[calc(100vh-4rem)]">
+            <div className="flex-1 basis-1/2">
+              <Editor />
+            </div>
+            <div className="flex-1 basis-1/2 overflow-y-auto">
+              <Preview />
+            </div>
+          </div>
+        </main>
+      </EditorContextProvider>
     </>
   );
 };

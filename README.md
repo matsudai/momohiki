@@ -244,7 +244,6 @@ yarn add -D unified remark-gfm rehype-highlight remark-parse rehype-react remark
 +   formatter.run(mdast).then((hast) => {
 +     const content = formatter.stringify(hast);
 +     setData((data) => ({ ...data, mdast, hast, content }));
-+     console.log(JSON.stringify(hast, null, 2));
 +   });
 + }, [data.text]);
 
