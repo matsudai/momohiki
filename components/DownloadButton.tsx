@@ -1,9 +1,9 @@
 import { renderToString } from 'react-dom/server';
 import { FC, useRef, useState } from 'react';
-import { useEditorContext } from './EditorContext';
+import { useEditorState } from '../lib/storage';
 
 export const DownloadButton: FC = () => {
-  const { data } = useEditorContext();
+  const [data] = useEditorState();
   const downloadLinkRef = useRef<HTMLAnchorElement | null>(null);
   const [cssCache, setCssCache] = useState<string>();
 

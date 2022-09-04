@@ -1,8 +1,8 @@
 import { FC } from 'react';
-import { useEditorContext } from './EditorContext';
+import { useEditorState } from '../lib/storage';
 
 export const Preview: FC = () => {
-  const { data } = useEditorContext();
+  const [{ content }] = useEditorState();
 
-  return <div className="w-full h-full">{data.content}</div>;
+  return <div className="w-full h-full">{content}</div>;
 };
