@@ -262,3 +262,75 @@ yarn add -D unified remark-gfm rehype-highlight remark-parse rehype-react remark
 ```sh
 yarn add -D @monaco-editor/react
 ```
+
+### MSW (Mock Service Worker)
+
+- https://mswjs.io/docs/getting-started/install
+- https://github.com/vercel/next.js/tree/canary/examples/with-msw
+
+```sh
+yarn add -D msw
+
+# Generate `public/mockServiceWorker.js`
+yarn msw init public
+```
+
+- mocks/index.ts
+
+```ts
+import { rest, setupWorker as setupMsw } from 'msw';
+
+const handlers = [
+  rest.get('/mocks/xxx', (req, res, ctx) => {
+    return res(ctx.status(200), ctx.body('API response.'));
+  })
+];
+
+interface IWindow {
+  mswRegistrationStatus?: 'loading' | 'ready';
+}
+
+export const serverState = (window: any) => (window as IWindow).mswRegistrationStatus;
+
+export const setupWorker = async (window: any) => {
+  (window as IWindow).mswRegistrationStatus = 'loading';
+
+  const worker = await setupMsw(...handlers).start({
+    // Supress errors when no mocked pathes are accessed.
+    onUnhandledRequest: 'bypass'
+  });
+
+  (window as IWindow).mswRegistrationStatus = 'ready';
+
+  return worker;
+};
+```
+
+- pages/index.tsx
+
+```ts
+import { serverState } from '../mocks';
+
+if (true /* Usually > process.env.NODE_ENV === 'development' */) {
+  import('../mocks').then(({ setupWorker }) => {
+    if (typeof window === 'undefined') {
+      // Server mode.
+    } else {
+      // Browser mode.
+      setupWorker(window);
+    }
+  });
+}
+
+function MyApp({ Component, pageProps }: AppProps) {
+  const [isServerReady, setIsServerReady] = useState<boolean>(false);
+  useEffect(() => {
+    if (typeof window !== 'undefined' && !isServerReady) {
+      const handler = setInterval(() => setIsServerReady(serverState(window) === 'ready'), 1000);
+      return () => clearInterval(handler);
+    }
+  }, [isServerReady]);
+
+  return isServerReady ? <Component {...pageProps} /> : <div>Loading...</div>;
+}
+```
