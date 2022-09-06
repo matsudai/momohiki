@@ -1,12 +1,15 @@
 import MonacoEditor, { OnMount } from '@monaco-editor/react';
-import { ClipboardEventHandler, DragEventHandler, FC, SyntheticEvent, useCallback, useRef } from 'react';
-import { saveFile } from '../lib/persist';
-import { useEditorState, useEditorTextState } from '../lib/storage';
+import { ClipboardEventHandler, DragEventHandler, FC, SyntheticEvent, useRef } from 'react';
+import { saveFile, useResourcesStorage } from '../lib/persistent-storage';
+import { useEditorResourcesState, useEditorState, useEditorTextState } from '../lib/storage';
 
 type EditorInstance = Parameters<OnMount>[0];
 
 export const Editor: FC = () => {
+  const resourcesStorage = useResourcesStorage();
+
   const [data] = useEditorState();
+  const [, setResources] = useEditorResourcesState();
   const [_, setText] = useEditorTextState();
   const ref = useRef<EditorInstance>(null);
 
@@ -32,24 +35,25 @@ export const Editor: FC = () => {
   };
 
   const insertFile = async (file: File) => {
-    const title = crypto.randomUUID();
     if (file.type === 'image/png') {
-      // const buffer = await new Promise<string>((resolve, reject) => {
-      //   const ifs = new FileReader();
-      //   ifs.readAsDataURL(file);
-      //   ifs.onload = () => {
-      //     typeof ifs.result === 'string' ? resolve(ifs.result) : reject('Type Error');
-      //   };
-      //   ifs.onerror = reject;
-      // });
+      const dataUrl = await new Promise<string>((resolve, reject) => {
+        const ifs = new FileReader();
+        ifs.readAsDataURL(file);
+        ifs.onload = () => {
+          typeof ifs.result === 'string' ? resolve(ifs.result) : reject('Type Error');
+        };
+        ifs.onerror = reject;
+      });
       const { type, name } = file;
       const data = await file.arrayBuffer();
-      const hash = await saveFile({ name, type, data });
+      const hash = await saveFile(resourcesStorage, { name, type, data, dataUrl });
+      // setResources((values) => [...(values ?? []), { hash, name, type, data, dataUrl }]);
+      setResources([{ hash, name, type, data, dataUrl }]);
 
-      // insertText(`![${title}](${buffer})`);
-      insertText(`![${title}](./mocks/sample.png?${hash})`);
+      insertText(`![](./sw/resources/${hash})`);
     }
   };
+  console.log(data);
 
   const onPaste: ClipboardEventHandler<HTMLDivElement> = async ({ clipboardData: { files } }) => {
     if (files.length > 0) {

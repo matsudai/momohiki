@@ -1,9 +1,11 @@
-import { loadFile } from '../lib/persist';
+import { instantiateResourceStorage, loadFile } from '../lib/persistent-storage';
 import { rest, setupWorker as setupMsw } from 'msw';
 
 const handlers = [
-  rest.get('/mocks/sample.png', async (req, res, ctx) => {
-    const file = await loadFile();
+  rest.get('/sw/resources/:id', async (req, res, ctx) => {
+    const storage = instantiateResourceStorage();
+    const { id } = req.params;
+    const file = await loadFile(storage, id.toString());
     if (file) {
       return res(ctx.status(200), ctx.body(new Blob([file.data], { type: file.type })));
     } else {

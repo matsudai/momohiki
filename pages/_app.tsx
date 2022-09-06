@@ -2,7 +2,6 @@ import '../styles/globals.css';
 import type { AppProps } from 'next/app';
 import { serverState } from '../mocks';
 import { useEffect, useState } from 'react';
-import { configure } from '../lib/persist';
 
 if (true /* Usually > process.env.NODE_ENV === 'development' */) {
   import('../mocks').then(({ setupWorker }) => {
@@ -23,10 +22,6 @@ function MyApp({ Component, pageProps }: AppProps) {
       return () => clearInterval(handler);
     }
   }, [isServerReady]);
-
-  useEffect(() => {
-    configure();
-  }, []);
 
   return isServerReady ? <Component {...pageProps} /> : <div>Loading...</div>;
 }

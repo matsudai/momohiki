@@ -1,9 +1,10 @@
 import { renderToString } from 'react-dom/server';
 import { FC, useRef, useState } from 'react';
-import { useEditorState } from '../lib/storage';
+import { useBundleResources, useEditorState } from '../lib/storage';
 
 export const DownloadButton: FC = () => {
-  const [data] = useEditorState();
+  // const [data] = useEditorState();
+  const bundle = useBundleResources();
   const downloadLinkRef = useRef<HTMLAnchorElement | null>(null);
   const [cssCache, setCssCache] = useState<string>();
 
@@ -22,7 +23,7 @@ export const DownloadButton: FC = () => {
           </head>
           <body>
             <main>
-              <div className="p-4">{data.content}</div>
+              <div className="p-4">{await bundle()}</div>
             </main>
           </body>
         </html>
