@@ -165,10 +165,8 @@ yarn add -D serve
 ```diff
 - swcMinify: true
 + swcMinify: true,
-+ experimental: {
-+   images: {
-+     unoptimized: true
-+   }
++ images: {
++   unoptimized: true
 + }
 ```
 

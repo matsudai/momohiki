@@ -4,10 +4,8 @@ const CopyPlugin = require('copy-webpack-plugin');
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
-  experimental: {
-    images: {
-      unoptimized: true
-    }
+  images: {
+    unoptimized: true
   },
   webpack: (config) => {
     config.plugins.push(
