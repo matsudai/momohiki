@@ -261,6 +261,9 @@ yarn add -D unified remark-gfm rehype-highlight remark-parse rehype-react remark
 
 ```sh
 yarn add -D @monaco-editor/react
+
+# Use node_modules/monaco-editor/min/vs instead of CDN
+yarn add -D monaco-editor copy-webpack-plugin
 ```
 
 ### MSW (Mock Service Worker)
