@@ -173,15 +173,15 @@ yarn add -D serve
 ### remark/rehype
 
 - Base
-    - unified
+  - unified
 - Remark
-    - remark-gfm
-    - remark-parse
-    - remark-rehype
+  - remark-gfm
+  - remark-parse
+  - remark-rehype
 - Rehype
-    - rehype-highlight
-    - rehype-react
-    - rehype-sanitize
+  - rehype-highlight
+  - rehype-react
+  - rehype-sanitize
 
 ```sh
 yarn add -D unified remark-gfm rehype-highlight remark-parse rehype-react remark-rehype rehype-sanitize
@@ -334,4 +334,23 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   return isServerReady ? <Component {...pageProps} /> : <div>Loading...</div>;
 }
+```
+
+### State (jotai, localforage)
+
+```sh
+yarn add -D jotai localforage
+```
+
+- lib/storage.ts
+
+```ts
+export interface IEditorState {
+  text?: string;
+  mdast?: MdastRoot;
+  hast?: HastRoot;
+  content?: ReactNode;
+}
+
+export const editorState = atom<IEditorState>({});
 ```

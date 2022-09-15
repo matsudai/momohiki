@@ -1,5 +1,5 @@
 import { atom, useAtom } from 'jotai';
-import { ReactNode, SetStateAction, useCallback } from 'react';
+import { ReactNode } from 'react';
 import { HastRoot, MdastRoot } from 'remark-rehype/lib';
 import { formatter } from './markdown';
 
