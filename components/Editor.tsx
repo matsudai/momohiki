@@ -1,17 +1,13 @@
 import MonacoEditor, { OnMount } from '@monaco-editor/react';
 import { ClipboardEventHandler, DragEventHandler, FC, SyntheticEvent, useRef } from 'react';
-import { saveFile, useResourcesStorage } from '../lib/persistent-storage';
-import { useEditorResourcesState, useEditorState, useEditorTextState } from '../lib/storage';
+import { useEditorState, useEditorTextState } from '../lib/storage';
 
 type EditorInstance = Parameters<OnMount>[0];
 
 export const Editor: FC = () => {
-  const resourcesStorage = useResourcesStorage();
-
   const [data] = useEditorState();
-  const [, setResources] = useEditorResourcesState();
   const [_, setText] = useEditorTextState();
-  const ref = useRef<EditorInstance>(null);
+  const ref = useRef<EditorInstance | null>(null);
 
   const insertText = (text: string) => {
     const editor = ref.current;
@@ -44,16 +40,9 @@ export const Editor: FC = () => {
         };
         ifs.onerror = reject;
       });
-      const { type, name } = file;
-      const data = await file.arrayBuffer();
-      const hash = await saveFile(resourcesStorage, { name, type, data, dataUrl });
-      // setResources((values) => [...(values ?? []), { hash, name, type, data, dataUrl }]);
-      setResources([{ hash, name, type, data, dataUrl }]);
-
-      insertText(`![](./sw/resources/${hash})`);
+      insertText(`![](${dataUrl})`);
     }
   };
-  console.log(data);
 
   const onPaste: ClipboardEventHandler<HTMLDivElement> = async ({ clipboardData: { files } }) => {
     if (files.length > 0) {

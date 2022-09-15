@@ -35,7 +35,7 @@ export const a: FC<DetailedHTMLProps<AnchorHTMLAttributes<HTMLAnchorElement>, HT
   ) : (
     <a {...props} target="_blank" className={`group text-blue-600 underline ${className ?? ''}`}>
       {children}
-      <ArrowTopRightOnSquareBtn className="pl-2 hidden group-hover:inline-block" />
+      {/* <ArrowTopRightOnSquareBtn className="pl-2 hidden group-hover:inline-block" /> */}
     </a>
   );
 };

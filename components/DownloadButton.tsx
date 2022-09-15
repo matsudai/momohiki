@@ -1,10 +1,9 @@
 import { renderToString } from 'react-dom/server';
 import { FC, useRef, useState } from 'react';
-import { useBundleResources, useEditorState } from '../lib/storage';
+import { useEditorState } from '../lib/storage';
 
 export const DownloadButton: FC = () => {
-  // const [data] = useEditorState();
-  const bundle = useBundleResources();
+  const [{ content }] = useEditorState();
   const downloadLinkRef = useRef<HTMLAnchorElement | null>(null);
   const [cssCache, setCssCache] = useState<string>();
 
@@ -23,7 +22,7 @@ export const DownloadButton: FC = () => {
           </head>
           <body>
             <main>
-              <div className="p-4">{await bundle()}</div>
+              <div className="p-4">{content}</div>
             </main>
           </body>
         </html>
@@ -33,7 +32,7 @@ export const DownloadButton: FC = () => {
       link.download = 'index.html';
       link.click();
     } else {
-      console.log('Download link is not found');
+      console.error('Download link is not found');
     }
   };
 
