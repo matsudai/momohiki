@@ -336,21 +336,8 @@ function MyApp({ Component, pageProps }: AppProps) {
 }
 ```
 
-### State (jotai, localforage)
+### State (zustand)
 
 ```sh
-yarn add -D jotai localforage
-```
-
-- lib/storage.ts
-
-```ts
-export interface IEditorState {
-  text?: string;
-  mdast?: MdastRoot;
-  hast?: HastRoot;
-  content?: ReactNode;
-}
-
-export const editorState = atom<IEditorState>({});
+yarn add zustand
 ```

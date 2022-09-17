@@ -1,9 +1,9 @@
 import { renderToString } from 'react-dom/server';
 import { FC, useRef, useState } from 'react';
-import { useEditorState } from '../lib/storage';
+import { useEditorComponent } from '../lib/editor';
 
 export const DownloadButton: FC = () => {
-  const [{ content }] = useEditorState();
+  const component = useEditorComponent();
   const downloadLinkRef = useRef<HTMLAnchorElement | null>(null);
   const [cssCache, setCssCache] = useState<string>();
 
@@ -22,7 +22,7 @@ export const DownloadButton: FC = () => {
           </head>
           <body>
             <main>
-              <div className="p-4">{content}</div>
+              <div className="p-4">{component}</div>
             </main>
           </body>
         </html>
@@ -41,7 +41,7 @@ export const DownloadButton: FC = () => {
       <button type="button" onClick={download}>
         Download
       </button>
-      <a className="hidden" ref={downloadLinkRef} />
+      <a className="hidden" href="#" ref={downloadLinkRef} />
     </div>
   );
 };
