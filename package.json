@@ -3,11 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "clean": "rm -rf .next out public/min-maps public/monaco-editor public/output.css next-env.d.ts",
     "dev": "concurrently \"yarn dev-css\" \"next dev\"",
     "dev-css": "postcss --watch styles/globals.css --config postcss.config.js -o public/output.css",
     "build": "yarn build-css && next build",
     "build-css": "postcss styles/globals.css --config postcss.config.js -o public/output.css",
-    "export": "yarn build && next export",
+    "export": "yarn clean && yarn build && next export",
     "start": "next start",
     "lint": "next lint",
     "fmt": "prettier --write .",
