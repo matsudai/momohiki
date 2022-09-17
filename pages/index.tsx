@@ -8,7 +8,7 @@ const Home: NextPage = () => {
   return (
     <>
       <Head>
-        <title>Create Next App</title>
+        <title>Markdown Editor</title>
         <meta name="description" content="Markdown Editor" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
