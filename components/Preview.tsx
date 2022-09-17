@@ -1,8 +1,8 @@
 import { FC } from 'react';
-import { useEditorState } from '../lib/storage';
+import { useEditorComponent } from '../lib/editor';
 
 export const Preview: FC = () => {
-  const [{ content }] = useEditorState();
+  const component = useEditorComponent();
 
-  return <div className="w-full h-full p-4">{content}</div>;
+  return <div className="w-full h-full p-4">{component}</div>;
 };

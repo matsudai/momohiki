@@ -5,9 +5,9 @@ import remarkGfm from 'remark-gfm';
 import remarkParse from 'remark-parse';
 import remarkRehype from 'remark-rehype';
 import { unified } from 'unified';
-import * as components from '../components/md-components';
+import * as components from './components';
 
-export const formatter = unified()
+export const markdown = unified()
   .use(remarkParse)
   .use(remarkGfm)
   .use(remarkRehype)

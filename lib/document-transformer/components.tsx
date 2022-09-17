@@ -1,5 +1,4 @@
 import { AnchorHTMLAttributes, DetailedHTMLProps, FC, HTMLAttributes } from 'react';
-import { ArrowTopRightOnSquareBtn } from './icons';
 
 type ExtendFC<T> = FC<DetailedHTMLProps<HTMLAttributes<T>, T>>;
 

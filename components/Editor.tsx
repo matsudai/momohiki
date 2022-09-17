@@ -1,19 +1,14 @@
 import MonacoEditor, { loader, OnMount } from '@monaco-editor/react';
-import { ClipboardEventHandler, DragEventHandler, FC, SyntheticEvent, useEffect, useRef } from 'react';
-import { useEditorState, useEditorTextState } from '../lib/storage';
+import { ClipboardEventHandler, DragEventHandler, FC, SyntheticEvent, useRef } from 'react';
+import { useEditorText } from '../lib/editor';
 
 loader.config({ paths: { vs: '/monaco-editor/min/vs' } });
 
 type EditorInstance = Parameters<OnMount>[0];
 
 export const Editor: FC = () => {
-  const [data] = useEditorState();
-  const [_, setText] = useEditorTextState();
+  const [text, setText] = useEditorText();
   const ref = useRef<EditorInstance | null>(null);
-
-  // useEffect(() => {
-  //   loader.init().then(console.log);
-  // }, []);
 
   const insertText = (text: string) => {
     const editor = ref.current;
@@ -75,7 +70,7 @@ export const Editor: FC = () => {
       <MonacoEditor
         defaultLanguage="markdown"
         defaultValue=""
-        value={data.text}
+        value={text}
         onChange={setText}
         onMount={(editor) => {
           ref.current = editor;
