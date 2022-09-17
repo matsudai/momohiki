@@ -41,7 +41,7 @@ export const DownloadButton: FC = () => {
       <button type="button" onClick={download}>
         Download
       </button>
-      <a className="hidden" ref={downloadLinkRef} />
+      <a className="hidden" href="#" ref={downloadLinkRef} />
     </div>
   );
 };
