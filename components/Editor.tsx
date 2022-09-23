@@ -54,7 +54,7 @@ export const Editor: FC = () => {
         };
         ifs.onerror = reject;
       });
-      insertText(`![](${dataUrl})`);
+      insertText(`![](${dataUrl})\n`);
     }
   };
 
