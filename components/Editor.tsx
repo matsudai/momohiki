@@ -13,6 +13,19 @@ export const Editor: FC = () => {
   const insertText = (text: string) => {
     const editor = ref.current;
     if (editor != null) {
+      /**
+       * [TODO] Paste event customization.
+       *
+       * refs: https://github.com/microsoft/monaco-editor/issues/3026
+       *
+       * When pasting, (1) paste clipboard data AS TEXT (2) call this function.
+       * As a result, "image.png![](data:image/png;base64...)" is pasted.
+       * But the file name "image.png" is unnecessary information.
+       *
+       * As an interim measure, roll back (1).
+       */
+      editor.trigger(null, 'undo', null);
+
       const selections = editor.getSelections();
       if (selections != null) {
         editor.executeEdits(
