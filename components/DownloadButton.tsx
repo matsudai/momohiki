@@ -17,12 +17,12 @@ export const DownloadButton: FC = () => {
       const html = renderToString(
         <html>
           {/* eslint-disable-next-line @next/next/no-head-element */}
-          <head>
+          <head lang="ja">
             <style dangerouslySetInnerHTML={{ __html: css }} />
           </head>
           <body>
             <main>
-              <div className="p-4">{component}</div>
+              <div className="w-full h-full p-4">{component}</div>
             </main>
           </body>
         </html>
