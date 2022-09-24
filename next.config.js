@@ -11,39 +11,24 @@ const nextConfig = {
     config.plugins.push(
       new CopyPlugin({
         patterns: [
-          /**
-           * 1. MonacoEditor Workers
-           */
-          ...[
-            'monaco-editor/min/vs/loader.js',
-            'monaco-editor/min/vs/editor/editor.main.js',
-            'monaco-editor/min/vs/editor/editor.main.css',
-            'monaco-editor/min/vs/editor/editor.main.nls.js',
-            'monaco-editor/min/vs/basic-languages/markdown/markdown.js',
-            'monaco-editor/min/vs/base/worker/workerMain.js',
-            'monaco-editor/min/vs/base/common/worker/simpleWorker.nls.js',
-            'monaco-editor/min/vs/base/browser/ui/codicons/codicon/codicon.ttf'
-          ],
-          /**
-           * 2. MonacoEditor SourceMap (for debug)
-           */
+          {
+            from: `${__dirname}/node_modules/monaco-editor/min/vs`,
+            to: `${__dirname}/public/monaco-editor/min/vs`
+          },
           ...(context.dev
             ? [
-                'monaco-editor/min-maps/vs/base/worker/workerMain.js.map',
-                'monaco-editor/min-maps/vs/editor/editor.main.nls.js.map',
+                {
+                  from: `${__dirname}/node_modules/monaco-editor/min-maps/vs`,
+                  to: `${__dirname}/public/min-maps/vs`
+                },
                 {
                   // Path cannot be modified.
-                  from: 'monaco-editor/min-maps/vs/base/common/worker/simpleWorker.nls.js.map',
-                  to: 'min-maps/vs/base/common/worker/simpleWorker.nls.js.map'
-                },
-                'monaco-editor/min-maps/vs/loader.js.map',
-                'monaco-editor/min-maps/vs/editor/editor.main.js.map'
+                  from: `${__dirname}/node_modules/monaco-editor/min-maps/vs/base/common/worker/simpleWorker.nls.js.map`,
+                  to: `${__dirname}/public/min-maps/vs/base/common/worker/simpleWorker.nls.js.map`
+                }
               ]
             : [])
-        ].map((n) => ({
-          from: `${__dirname}/node_modules/${typeof n === 'string' ? n : n.from}`,
-          to: `${__dirname}/public/${typeof n === 'string' ? n : n.to}`
-        }))
+        ]
       })
     );
     return config;
