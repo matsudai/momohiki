@@ -1,18 +1,26 @@
 import Link from 'next/link';
-import { FC } from 'react';
-import { ITopic, useEditorTopicTree } from '../lib/editor';
+import { FC, useCallback } from 'react';
+import { ITopic, useEditorCursor, useEditorTopicTree } from '../lib/editor';
 
 export interface TopicProps {
   topic?: ITopic;
 }
 
 export const Topic: FC<TopicProps> = ({ topic }) => {
+  const [_, setCursor] = useEditorCursor();
   const isEmpty = topic == null;
+
+  const moveToPos = useCallback(() => {
+    const position = topic?.position;
+    if (position != null) {
+      setCursor(position.start);
+    }
+  }, [topic, setCursor]);
 
   return isEmpty ? (
     <p className="w-32 text-gray-500 text-center">No Topics</p>
   ) : (
-    <Link href={`#${topic?.htmlId ?? ''}`}>
+    <Link href={`#${topic?.htmlId ?? ''}`} onClick={moveToPos}>
       <p
         className={`w-32 ${
           topic.level === 1

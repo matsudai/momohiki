@@ -8,6 +8,12 @@ export interface ITopic {
   htmlId: string;
   level: number;
   name: string;
+  position?: {
+    start: {
+      line: number;
+      column: number;
+    };
+  };
 }
 
 export interface IEditorContent {
@@ -18,9 +24,16 @@ export interface IEditorContent {
   topics: ITopic[];
 }
 
+export interface ICursor {
+  line: number;
+  column: number;
+}
+
 export interface IEditor {
   content?: IEditorContent;
+  cursor?: ICursor;
   setText: (text: string | undefined) => Promise<void>;
+  setCursor: (cursor: ICursor | undefined) => void;
 }
 
 type HastChild = HastRoot['children'][number];
@@ -55,7 +68,7 @@ export const parseTopics = (node: HastNode, topics: ITopic[] = []): ITopic[] => 
         const htmlId = node.properties?.id?.toString() ?? '';
         const level = Number(node.tagName[1]);
         const name = reduceTopicTexts(node).join(' ');
-        return [...topics, { htmlId, level, name }];
+        return [...topics, { htmlId, level, name, position: node.position }];
       } else {
         return [...topics, ...node.children.flatMap((n) => parseTopics(n))];
       }
@@ -113,11 +126,17 @@ export const useEditor = create<IEditor>()((set, get) => ({
   setText: async (text) => {
     const content = text == null ? undefined : await transform(text, get().content);
     set(() => ({ content }));
+  },
+  setCursor: (cursor) => {
+    set(() => ({ cursor }));
   }
 }));
 
 export const useEditorText = (): [string | undefined, (value: string | undefined) => Promise<void>] =>
   useEditor(({ content, setText }) => [content?.text, setText], shallow);
+
+export const useEditorCursor = (): [ICursor | undefined, (value: ICursor | undefined) => void] =>
+  useEditor(({ cursor, setCursor }) => [cursor, setCursor], shallow);
 
 export const useEditorMdast = () => useEditor(({ content }) => content?.mdast, shallow);
 export const useEditorHast = () => useEditor(({ content }) => content?.hast, shallow);
