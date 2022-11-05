@@ -1,9 +1,10 @@
-import { ClipboardEventHandler, DragEventHandler, FC, SyntheticEvent, useRef } from 'react';
-import { useEditorText } from '../lib/editor';
+import { ClipboardEventHandler, DragEventHandler, FC, SyntheticEvent, useEffect, useRef } from 'react';
+import { useEditorCursor, useEditorText } from '../lib/editor';
 import { Editor, IEditor } from './Editor';
 
 export const EditorMd: FC = () => {
   const [text, setText] = useEditorText();
+  const [cursor, setCursor] = useEditorCursor();
   const ref = useRef<IEditor | null>(null);
 
   const insertText = (text: string) => {
@@ -74,6 +75,20 @@ export const EditorMd: FC = () => {
     event.stopPropagation();
   };
 
+  useEffect(() => {
+    console.log('pos');
+    const editor = ref.current;
+    if (cursor != null && editor != null) {
+      const pos = editor.getPosition();
+      if (pos != null) {
+        if (pos.lineNumber !== cursor.line || pos.column !== cursor.column) {
+          editor.setPosition({ lineNumber: cursor.line, column: cursor.column });
+          editor.revealPositionNearTop({ lineNumber: cursor.line, column: cursor.column });
+        }
+      }
+    }
+  }, [ref, cursor]);
+
   return (
     <div onPaste={onPaste} onDrop={onDrop} onDragOver={preventDefault} className="w-full h-full">
       <Editor
@@ -83,6 +98,10 @@ export const EditorMd: FC = () => {
         onChange={setText}
         onMount={(editor) => {
           ref.current = editor;
+          editor.onDidChangeCursorPosition(({ position }) => {
+            const { lineNumber: line, column: column } = position;
+            setCursor({ line, column });
+          });
         }}
       />
     </div>
