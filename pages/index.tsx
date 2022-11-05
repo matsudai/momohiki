@@ -6,6 +6,7 @@ import { EditorMd } from '../components/EditorMarkdown';
 import { Preview } from '../components/Preview';
 import { PreviewHast } from '../components/PreviewHast';
 import { PreviewMdast } from '../components/PreviewMdast';
+import { TopicTree } from '../components/TopicTree';
 
 type ButtonProps = DetailedHTMLProps<ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement>;
 const Tab: FC<Pick<ButtonProps, 'onClick' | 'children'>> = (props) => {
@@ -52,7 +53,12 @@ const Home: NextPage = () => {
             <Tab onClick={changePreviewType.toHtml}>HTML</Tab>
           </div>
         </div>
-        <div className="flex-grow flex flex-row h-[calc(100vh-4rem)]">
+        <div className="flex-grow flex h-[calc(100vh-4rem)]">
+          <div className="flex-1 flex-grow-0 h-full">
+            <div className="w-32 h-full overflow-y-auto">
+              <TopicTree />
+            </div>
+          </div>
           <div className="flex-1 basis-1/2">
             <EditorMd />
           </div>
