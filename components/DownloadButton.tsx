@@ -1,6 +1,7 @@
 import { renderToString } from 'react-dom/server';
 import { FC, useRef, useState } from 'react';
 import { useEditorComponent } from '../lib/editor';
+import { TopicTree } from './TopicTree';
 
 export const DownloadButton: FC = () => {
   const component = useEditorComponent();
@@ -21,8 +22,13 @@ export const DownloadButton: FC = () => {
             <style dangerouslySetInnerHTML={{ __html: css }} />
           </head>
           <body>
-            <main>
-              <div className="w-full h-full p-4">{component}</div>
+            <main className="flex h-screen">
+              <div className="flex-1 flex-grow-0 p-4">
+                <div className="w-32 h-full overflow-y-auto">
+                  <TopicTree />
+                </div>
+              </div>
+              <div className="flex-1 h-screen p-4 overflow-y-auto">{component}</div>
             </main>
           </body>
         </html>
