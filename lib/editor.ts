@@ -2,7 +2,7 @@ import { ReactNode } from 'react';
 import { HastRoot, MdastRoot } from 'remark-rehype/lib';
 import create from 'zustand';
 import shallow from 'zustand/shallow';
-import { markdown, filterTopics, ITopic } from './document-transformer';
+import { markdown, filterTopics, ITopic } from './translation';
 
 export interface IEditorContent {
   text: string;

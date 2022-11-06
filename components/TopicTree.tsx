@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { FC, useCallback } from 'react';
-import { ITopic } from '../lib/document-transformer';
+import { ITopic } from '../lib/translation';
 import { useEditorCursor, useEditorTopicTree } from '../lib/editor';
 
 export interface TopicProps {
