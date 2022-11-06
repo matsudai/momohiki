@@ -76,7 +76,6 @@ export const EditorMd: FC = () => {
   };
 
   useEffect(() => {
-    console.log('pos');
     const editor = ref.current;
     if (cursor != null && editor != null) {
       const pos = editor.getPosition();

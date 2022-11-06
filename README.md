@@ -182,9 +182,13 @@ yarn add -D serve
   - rehype-highlight
   - rehype-react
   - rehype-sanitize
+- utils
+  - unist-util-inspect (debug tree)
+  - unist-util-visit (add id to html)
 
 ```sh
 yarn add -D unified remark-gfm rehype-highlight remark-parse rehype-react remark-rehype rehype-sanitize
+yarn add -D unist-util-inspect unist-util-visit
 ```
 
 - Copy `node_modules/highlight.js/styles/default.css` -> `styles/globals.css`

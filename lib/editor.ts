@@ -2,19 +2,7 @@ import { ReactNode } from 'react';
 import { HastRoot, MdastRoot } from 'remark-rehype/lib';
 import create from 'zustand';
 import shallow from 'zustand/shallow';
-import { markdown } from './document-transformer';
-
-export interface ITopic {
-  htmlId: string;
-  level: number;
-  name: string;
-  position?: {
-    start: {
-      line: number;
-      column: number;
-    };
-  };
-}
+import { markdown, filterTopics, ITopic } from './document-transformer';
 
 export interface IEditorContent {
   text: string;
@@ -36,78 +24,12 @@ export interface IEditor {
   setCursor: (cursor: ICursor | undefined) => void;
 }
 
-type HastChild = HastRoot['children'][number];
-type HastElement = Extract<HastChild, { type: 'element' }>;
-type HastNode = HastRoot | HastChild;
-
-export const reduceTopicTexts = (node: HastNode, tokens: string[] = []): string[] => {
-  switch (node.type) {
-    case 'root':
-    case 'element':
-      return [...tokens, ...node.children.flatMap((n) => reduceTopicTexts(n))];
-    case 'text':
-      return [...tokens, node.value];
-    default:
-      return tokens;
-  }
-};
-
-export const parseTopics = (node: HastNode, topics: ITopic[] = []): ITopic[] => {
-  switch (node.type) {
-    case 'root':
-      return [...topics, ...node.children.flatMap((n) => parseTopics(n))];
-    case 'element':
-      if (
-        node.tagName === 'h1' ||
-        node.tagName === 'h2' ||
-        node.tagName === 'h3' ||
-        node.tagName === 'h4' ||
-        node.tagName === 'h5' ||
-        node.tagName === 'h6'
-      ) {
-        const htmlId = node.properties?.id?.toString() ?? '';
-        const level = Number(node.tagName[1]);
-        const name = reduceTopicTexts(node).join(' ');
-        return [...topics, { htmlId, level, name, position: node.position }];
-      } else {
-        return [...topics, ...node.children.flatMap((n) => parseTopics(n))];
-      }
-    default:
-      return topics;
-  }
-};
-
-const hastWithIdImpl = <T extends HastChild | HastElement>(node: T): T => {
-  switch (node.type) {
-    case 'element':
-      if (
-        node.tagName === 'h1' ||
-        node.tagName === 'h2' ||
-        node.tagName === 'h3' ||
-        node.tagName === 'h4' ||
-        node.tagName === 'h5' ||
-        node.tagName === 'h6'
-      ) {
-        const { line, column, offset } = node.position?.start ?? {};
-        const htmlId =
-          line == null || column == null || offset == null ? crypto.randomUUID() : `${node.tagName}-${line}-${column}-${offset}`;
-        return { ...node, properties: { ...node.properties, id: htmlId }, children: node.children.map(hastWithIdImpl) };
-      } else {
-        return { ...node, children: node.children.map(hastWithIdImpl) };
-      }
-    default:
-      return node;
-  }
-};
-
-const hastWithId = (hast: HastRoot): HastRoot => ({ ...hast, children: hast.children.map(hastWithIdImpl) });
-
 export const transform = async (text: string, content: IEditorContent | undefined) => {
   try {
     const mdast = markdown.parse(text);
     try {
-      const hast = hastWithId(await markdown.run(mdast));
-      const topics = parseTopics(hast);
+      const hast = await markdown.run(mdast);
+      const topics = filterTopics(hast);
       try {
         const component = markdown.stringify(hast);
         return { text, mdast, hast, component, topics };

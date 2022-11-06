@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { FC, useCallback } from 'react';
-import { ITopic, useEditorCursor, useEditorTopicTree } from '../lib/editor';
+import { ITopic } from '../lib/document-transformer';
+import { useEditorCursor, useEditorTopicTree } from '../lib/editor';
 
 export interface TopicProps {
   topic?: ITopic;
@@ -40,7 +41,7 @@ export const Topic: FC<TopicProps> = ({ topic }) => {
             : ''
         }`}
       >
-        {topic.name}
+        {topic.headingText}
       </p>
     </Link>
   );
