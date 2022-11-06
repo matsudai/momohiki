@@ -24,7 +24,7 @@ export const DownloadButton: FC = () => {
           <body>
             <main className="flex h-screen">
               <div className="flex-1 flex-grow-0 p-4">
-                <div className="w-32 h-full overflow-y-auto">
+                <div className="w-48 h-full overflow-y-auto">
                   <TopicTree />
                 </div>
               </div>

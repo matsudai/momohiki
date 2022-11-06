@@ -55,7 +55,7 @@ const Home: NextPage = () => {
         </div>
         <div className="flex-grow flex h-[calc(100vh-4rem)]">
           <div className="flex-1 flex-grow-0 h-full">
-            <div className="w-32 h-full overflow-y-auto">
+            <div className="w-48 h-full overflow-y-auto">
               <TopicTree />
             </div>
           </div>
