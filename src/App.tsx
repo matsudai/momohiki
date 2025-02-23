@@ -1,5 +1,7 @@
+import { markdown } from '@codemirror/lang-markdown'
 import { QueryClient, QueryClientProvider, useQuery } from '@tanstack/react-query'
-import { FC } from 'react'
+import { basicSetup, EditorView } from 'codemirror'
+import { FC, useEffect, useMemo, useState } from 'react'
 import { HashRouter, Link, Route, Routes } from 'react-router'
 
 const queryClient = new QueryClient()
@@ -16,6 +18,7 @@ const App: FC = () => {
 }
 
 const HomePage: FC = () => {
+  const [editor, setEditor] = useState<EditorView>()
   const { data } = useQuery<string>({
     queryKey: ['HomePage', 'response'],
     queryFn: async () => {
@@ -25,10 +28,29 @@ const HomePage: FC = () => {
     }
   })
 
+  useEffect(() => {
+    const editorEl = document.getElementById('editor');
+    let editor: EditorView | undefined = undefined;
+    if (editorEl) {
+      setEditor((e) => {
+        if (e) { return e; }
+        editor = new EditorView({
+          parent: editorEl,
+          doc: `*CodeMirror* Markdown \`mode\``,
+          extensions: [basicSetup, markdown()]
+        })
+        return editor
+      })
+    }
+    return () => { editor?.destroy() }
+  }, [])
+
   return <div>
       <h1>Home</h1>
       <p>(&gt;<Link to="/sub">Sub</Link>)</p>
       <p>{data ?? 'request...'}</p>
+      <hr />
+      <div id="editor" />
     </div>
 }
 

@@ -10,8 +10,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@codemirror/lang-markdown": "^6.3.2",
     "@tailwindcss/vite": "^4.0.8",
     "@tanstack/react-query": "^5.66.9",
+    "codemirror": "^6.0.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-icons": "^5.5.0",

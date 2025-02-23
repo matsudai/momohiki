@@ -121,3 +121,11 @@
     +   </QueryClientProvider>
       }
     ```
+
+## CodeMirror & Markdown
+
+* Install
+
+    ```sh
+    npm install codemirror @codemirror/lang-markdown
+    ```
